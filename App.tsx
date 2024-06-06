@@ -14,7 +14,6 @@ function RetanguloCinza({ children }) {
   );
 }
 
-
 function InputUsuario({}) {
   const rectangleHeight = screenHeight * 0.1; 
   const rectangleWidth = screenWidth * 0.7;
