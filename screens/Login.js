@@ -2,7 +2,7 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Dimensions, TouchableOpacity, ImageBackground } from 'react-native';
 
-import Button from './components/Button';
+import Button from '../components/Button';
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
@@ -14,7 +14,7 @@ function RetanguloCinza({ children }) {
   );
 }
 
-export default function App() {
+export default function Login() {
   return (
     <View style={styles.container}>
       <RetanguloCinza>
