@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   linkText: {
-    color: 'blue',
+    color: 'black',
     textDecorationLine: 'underline',
   },
 });

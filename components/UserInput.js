@@ -6,7 +6,7 @@ export default function UserInput({ placeholder }) {
         <TextInput 
           style={styles.input} 
           placeholder={placeholder}
-          placeholderTextColor="#000000"
+          placeholderTextColor="#827f80"
         />
     </View>
   );
@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 3,
+    marginBottom: '20px',
   },
   input: {
     borderRadius: 10,

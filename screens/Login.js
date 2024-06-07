@@ -19,22 +19,30 @@ function RetanguloCinza({ children }) {
 
 export default function Login() {
   return (
+    
     <View style={styles.container}>
+      <ImageBackground
+          source={require('../assets/cookie.jpg')}
+          style={styles.buttonBackground}
+        >
+      <View style={styles.overlay} />
       <RetanguloCinza>
-        <Text>Entre com sua conta</Text>
+        <Text style={styles.title}>Entre com sua conta</Text>
 
-        <UserInput placeholder="Insira seu email" />
+        <UserInput placeholder="Email: nome@exemplo.com" />
         
-        <UserInput placeholder="Insira sua senha" />
+        <UserInput placeholder="Senha" />
 
         <Link label="Esqueceu sua senha?" to="[TODO]"/>
 
-        <Button label="Enviar" />
+        <Button label="Entrar" />
 
-        <Text>Ainda não possui conta? Registre-se</Text>
+        <Text>Ainda não possui conta? <Link label="Registre-se" to="[TODO]"/></Text>
       </RetanguloCinza>
       <StatusBar style="auto" />
+      </ImageBackground>
     </View>
+    
   );
 }
 
@@ -52,17 +60,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
-    width: screenWidth * 0.8,
+    width: screenWidth * 0.9,
     maxWidth: 400,
   },
-  input: {
-    height: 40,
-    width: '80%',
-    backgroundColor: '#ffffff',
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: '60px'
+  },
+  buttonBackground: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden', 
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255, 255, 255, 0.35)', // Cor branca semi-transparente
     borderRadius: 10,
-    paddingHorizontal: 10,
-    marginVertical: 5,
-    borderWidth: 1,
-    borderColor: 'gray',
   },
 });
