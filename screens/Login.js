@@ -3,6 +3,9 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Dimensions, TouchableOpacity, ImageBackground } from 'react-native';
 
 import Button from '../components/Button';
+import Link from '../components/Link';
+import UserInput from '../components/UserInput';
+
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
@@ -20,12 +23,11 @@ export default function Login() {
       <RetanguloCinza>
         <Text>Entre com sua conta</Text>
 
-        <Text>Email</Text>
-        <input style={styles.input} />
-        <Text>Senha</Text>
-        <input style={styles.input} />
+        <UserInput placeholder="Insira seu email" />
+        
+        <UserInput placeholder="Insira sua senha" />
 
-        <Text>Esqueceu sua senha?</Text>
+        <Link label="Esqueceu sua senha?" to="[TODO]"/>
 
         <Button label="Enviar" />
 

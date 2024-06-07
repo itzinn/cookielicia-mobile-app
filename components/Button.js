@@ -4,7 +4,7 @@ export default function Button({ label }) {
   return (
     <View style={styles.buttonContainer}>
     <ImageBackground
-            source={require('./test.png')}
+            source={require('../assets/cookie.jpg')}
             style={styles.buttonBackground}
           >
       <Pressable style={styles.button} onPress={() => alert('You pressed a button.')}>
