@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Dimensions, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 
@@ -14,16 +14,17 @@ export default function Header() {
       style={styles.header}
       imageStyle={styles.imageBackground}
     >
+      <View style={styles.overlay} />
       <View style={styles.headerContent}>
-        <TouchableOpacity style={styles.headerIcon}>
+        <Pressable style={styles.headerIcon}>
           <Icon name="user" size={RFPercentage(4)} color="#000" />
-        </TouchableOpacity>
+        </Pressable>
         <View style={styles.headerLogo}>
           <Text style={styles.logoText}>Cookielicia</Text>
         </View>
-        <TouchableOpacity style={styles.headerIcon}>
+        <Pressable style={styles.headerIcon}>
           <Icon name="shopping-cart" size={RFPercentage(4)} color="#000" />
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </ImageBackground>
   );
@@ -31,12 +32,15 @@ export default function Header() {
 
 const styles = StyleSheet.create({
   header: {
-    width: width,
-    height: headerHeight,
+    width: '100%',
+    height: '10%',
   },
   imageBackground: {
-    opacity: 0.8,
-    backgroundColor: '#F9A825',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden', // Garante que a imagem respeite as bordas arredondadas
   },
   headerContent: {
     flexDirection: 'row',
@@ -58,5 +62,10 @@ const styles = StyleSheet.create({
     fontSize: isTablet ? RFPercentage(3.5) : RFPercentage(4.5),
     fontWeight: 'bold',
     color: '#000',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)', // Cor branca semi-transparente
+    borderRadius: 10,
   },
 });

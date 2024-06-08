@@ -1,5 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text, ImageBackground } from 'react-native';
+import { StyleSheet, View, Text, ImageBackground, Pressable } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { RFPercentage } from 'react-native-responsive-fontsize';
+
 
 export default function FooterMenu() {
   return (
@@ -11,8 +14,17 @@ export default function FooterMenu() {
         >
           <View style={styles.overlay} />
 
-        <Text>Footer Menu</Text>
-
+          <View style={styles.footerContent}>
+          <Pressable style={styles.footerIcon}>
+          <Icon name="home" size={RFPercentage(4)} color="#000" />
+        </Pressable>
+        <Pressable style={styles.footerIcon}>
+          <Icon name="shopping-cart" size={RFPercentage(4)} color="#000" />
+        </Pressable>
+        <Pressable style={styles.footerIcon}>
+          <Icon name="search" size={RFPercentage(4)} color="#000" />
+        </Pressable>
+        </View>
         </ImageBackground>
       </View>
   );
@@ -34,6 +46,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden', // Garante que a imagem respeite as bordas arredondadas
+  },
+  footerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-around', // Use 'space-around' or 'space-evenly' for equal spacing
+    alignItems: 'center',
+    width: '100%', 
+    height: '100%',
+  },
+  footerIcon: {
+    alignItems: 'center',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
