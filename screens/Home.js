@@ -3,6 +3,8 @@ import { StyleSheet, Text, View, Dimensions, ImageBackground } from 'react-nativ
 
 import FooterMenu from '../components/FooterMenu';
 import Header from '../components/Header';
+import ProductCarousel from '../components/ProductCarousel';
+
 
 
 export default function Home() {
@@ -10,7 +12,9 @@ export default function Home() {
 
     <View style={styles.container}>
         <Header />
-
+          <Text>Ofertas</Text>
+          <Text>Ver mais</Text>
+          <ProductCarousel />
         <FooterMenu/>
     </View>
     
