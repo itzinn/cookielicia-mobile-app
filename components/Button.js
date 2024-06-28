@@ -1,9 +1,10 @@
+import React from 'react';
 import { StyleSheet, View, Pressable, Text, ImageBackground } from 'react-native';
 
-export default function Button({ label }) {
+export default function Button({ label, onPress }) {
   return (
     <View style={styles.buttonContainer}>
-      <Pressable style={styles.button} onPress={() => alert('You pressed a button.')}>
+      <Pressable style={styles.button} onPress={onPress}>
         <ImageBackground
           source={require('../assets/cookie.jpg')}
           style={styles.buttonBackground}
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 3,
-    margin:20,
+    margin: 20,
   },
   button: {
     borderRadius: 10,

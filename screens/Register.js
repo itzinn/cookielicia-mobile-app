@@ -1,11 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Dimensions, TouchableOpacity, ImageBackground } from 'react-native';
-
 import Button from '../components/Button';
 import Link from '../components/Link';
 import UserInput from '../components/UserInput';
-
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
 
@@ -18,36 +16,74 @@ function RetanguloCinza({ children }) {
 }
 
 export default function Register() {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleRegister = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, email, password }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        //alert(data.message);
+        //redirect to /login
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error('Erro:', error);
+      alert('Erro ao registrar');
+    }
+  };
+
   return (
-    
     <View style={styles.container}>
       <ImageBackground
-          source={require('../assets/cookie.jpg')}
-          style={styles.buttonBackground}
-        >
-      <View style={styles.overlay} />
-      <RetanguloCinza>
-        <Text style={styles.title}>Crie sua conta</Text>
-
-        <UserInput placeholder="Nome de usuário" />
-
-        <UserInput placeholder="Email: nome@exemplo.com" />
-        
-        <UserInput placeholder="Senha" />
-
-        <label style={styles.label}>
-          <input type="checkbox"/>
-          <Text>Concordo com os <Link label="Termos e Condições" to="[TODO]"/> e
-          <Link label="Políticas de Privacidade" to="[TODO]"/></Text>
-        </label>
-
-        <Button label="Cadastrar" />
-
-      </RetanguloCinza>
-      <StatusBar style="auto" />
+        source={require('../assets/cookie.jpg')}
+        style={styles.buttonBackground}
+      >
+        <View style={styles.overlay} />
+        <RetanguloCinza>
+          <Text style={styles.title}>Crie sua conta</Text>
+          
+          <UserInput 
+            placeholder="Nome de usuário"
+            value={username}
+            onChangeText={setUsername}
+          />
+          
+          <UserInput 
+            placeholder="Email: nome@exemplo.com"
+            value={email}
+            onChangeText={setEmail}
+          />
+          
+          <UserInput 
+            placeholder="Senha"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+          
+          <label style={styles.label}>
+            <input type="checkbox" />
+            <Text>Concordo com os <Link label="Termos e Condições" to="[TODO]" /> e
+              <Link label="Políticas de Privacidade" to="[TODO]" /></Text>
+          </label>
+          
+          <Button label="Cadastrar" onPress={handleRegister} />
+          
+        </RetanguloCinza>
+        <StatusBar style="auto" />
       </ImageBackground>
     </View>
-    
   );
 }
 

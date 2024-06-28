@@ -6,8 +6,7 @@ export default function Link({ label, to }) {
   //const navigation = useNavigation();
 
   return (
-    //<Pressable onPress={() => navigation.navigate(to)} style={styles.linkContainer}>
-    <Pressable>
+    <Pressable onPress={() => navigation.navigate(to)} style={styles.linkContainer}>
       <Text style={styles.linkText}>{label}</Text>
     </Pressable>
   );
