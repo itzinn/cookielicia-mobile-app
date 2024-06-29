@@ -140,6 +140,8 @@ app.get('/cart-details', (req, res) => {
     return res.json([]);
   }
 
+  console.log(req.session.cart)
+
   const placeholders = req.session.cart.map(() => '?').join(',');
   const sql = `SELECT * FROM cookies WHERE id IN (${placeholders})`;
 
