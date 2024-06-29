@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import "react-multi-carousel/lib/styles.css";
 import Carousel from "react-multi-carousel";
 import ProductCard from './ProductCard';
@@ -22,54 +22,25 @@ const responsive = {
   }
 };
 
-const products = [
-    {
-      id: '1',
-      title: 'Tradicional C.Branco',
-      oldPrice: 'R$ 10,00',
-      newPrice: 'R$ 6,50',
-      image: require('../assets/cookie-icon.png'),
-    },
-    {
-      id: '2',
-      title: 'Cookie de Chocolate',
-      oldPrice: 'R$ 12,00',
-      newPrice: 'R$ 8,00',
-      image: require('../assets/cookie-icon.png'),
-    },
-    {
-      id: '3',
-      title: 'Cookie de Aveia e Mel',
-      oldPrice: 'R$ 11,00',
-      newPrice: 'R$ 7,00',
-      image: require('../assets/cookie-icon.png'),
-    },
-    {
-      id: '4',
-      title: 'Cookie de Amendoim',
-      oldPrice: 'R$ 9,00',
-      newPrice: 'R$ 5,50',
-      image: require('../assets/cookie-icon.png'),
-    },
-    {
-      id: '5',
-      title: 'Cookie de Canela',
-      oldPrice: 'R$ 13,00',
-      newPrice: 'R$ 9,00',
-      image: require('../assets/cookie-icon.png'),
-    },
-    {
-      id: '6',
-      title: 'Cookie de Nozes',
-      oldPrice: 'R$ 14,00',
-      newPrice: 'R$ 10,00',
-      image: require('../assets/cookie-icon.png'),
-    },
-  ];  
-
 export default function ProductCarousel({ deviceType }) {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/cookies');
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error('Erro ao buscar produtos:', error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
-    <Carousel 
+    <Carousel
       responsive={responsive}
       infinite={true}
       keyBoardControl={true}
@@ -79,7 +50,6 @@ export default function ProductCarousel({ deviceType }) {
       dotListClass="custom-dot-list-style"
       itemClass="carousel-item-padding-40-px"
       style={styles.carouselContainer}
-      
     >
       {products.map((product) => (
         <div key={product.id} style={styles.carouselItem}>
@@ -91,15 +61,15 @@ export default function ProductCarousel({ deviceType }) {
 }
 
 const styles = {
-    carouselContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      paddingTop: 50, // Adiciona margem do topo
-    },
-    carouselItem: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-    }
-  };
+  carouselContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 50,
+  },
+  carouselItem: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
+};

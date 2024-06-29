@@ -6,10 +6,12 @@ export default function ProductCard({ item }) {
     return <Text>Erro: item não encontrado</Text>;
   }
 
+  img = require('../assets/cookie-icon.png')
+
   return (
     <Pressable>
       <View style={styles.card}>
-        <Image source={item.image} style={styles.image} />
+        <Image source={img} style={styles.image} />
         <Text style={styles.title}>{item.title}</Text>
         <Text style={styles.oldPrice}>{item.oldPrice}</Text>
         <Text style={styles.newPrice}>{item.newPrice}</Text>

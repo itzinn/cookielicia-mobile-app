@@ -32,6 +32,16 @@ db.serialize(() => {
       password TEXT NOT NULL
     )
   `);
+
+  // Create Cookies table if it doesn't exist
+  db.run(`
+    CREATE TABLE IF NOT EXISTS cookies (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      oldPrice TEXT NOT NULL,
+      newPrice TEXT NOT NULL
+    )
+  `);
 });
 
 // Configure session middleware
@@ -92,6 +102,17 @@ app.get('/home', (req, res) => {
   } else {
     res.status(401).json({ message: 'Não autorizado' });
   }
+});
+
+// Endpoint para buscar todos os cookies
+app.get('/cookies', (req, res) => {
+  db.all('SELECT * FROM cookies', (err, rows) => {
+    if (err) {
+      res.status(500).json({ message: 'Erro no servidor' });
+    } else {
+      res.json(rows);
+    }
+  });
 });
 
 

@@ -14,15 +14,33 @@ function createTables() {
       )
     `);
   });
+
+  // Create Cookies table if it doesn't exist
+  db.run(`
+    CREATE TABLE IF NOT EXISTS cookies (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      oldPrice TEXT NOT NULL,
+      newPrice TEXT NOT NULL
+    )
+  `);
 }
 
 // Função para popular tabelas com dados iniciais, se necessário
 function seedDatabase() {
   db.serialize(() => {
-    const stmt = db.prepare(`INSERT INTO users (username, email, password) VALUES (?, ?, ?)`);
-    stmt.run('admin','admin@example.com', 'password123');
-    stmt.finalize();
+    // const stmt = db.prepare(`INSERT INTO users (username, email, password) VALUES (?, ?, ?)`);
+    // stmt.run('admin','admin@example.com', 'password123');
+    // stmt.finalize();
+
+    // Inserir dados na tabela cookies
+    const cookieStmt = db.prepare(`INSERT INTO cookies (title, oldPrice, newPrice) VALUES (?, ?, ?)`);
+    cookieStmt.run('Cookie de Chocolate', 'R$ 12,00', 'R$ 8,00');
+    cookieStmt.run('Cookie de Baunilha', 'R$ 10,00', 'R$ 7,00');
+    cookieStmt.run('Cookie de Aveia', 'R$ 8,00', 'R$ 5,00');
+    cookieStmt.finalize();
   });
+
 }
 
 // Inicializar o banco de dados
