@@ -10,8 +10,8 @@ export default function OrderStatus() {
 
   useEffect(() => {
     const now = new Date();
-    const deliveryWindowStart = new Date(now.getTime() + 30 * 60000); // 30 minutes later
-    const deliveryWindowEnd = new Date(now.getTime() + 45 * 60000); // 45 minutes later
+    const deliveryWindowStart = new Date(now.getTime() + 30 * 60000); 
+    const deliveryWindowEnd = new Date(now.getTime() + 45 * 60000);
 
     const formattedStartTime = formatTime(deliveryWindowStart);
     const formattedEndTime = formatTime(deliveryWindowEnd);
