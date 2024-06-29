@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-//fonte poppins
+// Fonte Poppins
 
 const CookieCard = () => {
   useEffect(() => {
@@ -24,26 +24,13 @@ const CookieCard = () => {
           <p style={styles.description}>Massa tradicional com deliciosas gotas de chocolate ao leite</p>
           <p style={styles.price}>R$ 10,00</p>
         </div>
-        <div style={styles.quantityContainer}>
-          <button style={styles.quantityButton} onClick={decreaseQuantity}>-</button>
-          <span style={styles.quantity}>{quantity}</span>
-          <button style={styles.quantityButton} onClick={increaseQuantity}>+</button>
-        </div>
+       
       </div>
     </div>
   );
 };
 
 const styles = {
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
-    backgroundColor: '#EDEDED',
-    padding: '20px',
-    position: 'relative',
-  },
   card: {
     display: 'flex',
     alignItems: 'center',
@@ -53,56 +40,52 @@ const styles = {
     width: '90%',
     maxWidth: '400px',
     boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-    position: 'relative', 
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginBottom: '20px', 
   },
+  
   cookieIcon: {
     width: '66px', 
     height: '66px',
     marginRight: '20px',
-    alignSelf: 'center', 
+    flexShrink: 0,
   },
   content: {
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
+    textAlign: 'center',
   },
   title: {
     margin: '0',
-    fontSize: '18px',
+    fontSize: '1.125rem',
     fontWeight: 'bold',
     color: '#333',
     fontFamily: 'Poppins, sans-serif',
-    textAlign: 'center',
-    whiteSpace: 'nowrap',
   },
   description: {
     margin: '5px 0',
-    fontSize: '16px',
+    fontSize: '1rem',
     color: '#666',
     fontFamily: 'Poppins, sans-serif',
-    textAlign: 'center',
   },
   price: {
     margin: '10px 0',
-    fontSize: '25px',
+    fontSize: '1.5rem',
     fontWeight: 'bold',
     color: '#FFA500',
     fontFamily: 'Poppins, sans-serif',
-    textAlign: 'center',
   },
   quantityContainer: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'absolute',
-    right: '-15px', 
-    bottom: '-15px',
     backgroundColor: '#FCB040',
     borderRadius: '100%',
     padding: '5px 10px',
     boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-    width: '44px', 
-    height: '54px',
+    marginTop: '10px',
   },
   quantityButton: {
     backgroundColor: 'transparent',
@@ -119,7 +102,7 @@ const styles = {
     fontSize: '18px',
     fontWeight: 'bold',
     color: 'black',
-    fontFamily: 'arial',
+    fontFamily: 'Arial, sans-serif',
   },
 };
 
