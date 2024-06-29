@@ -17,7 +17,7 @@ export default function Header() {
       <View style={styles.overlay} />
       <View style={styles.headerContent}>
         <Pressable style={styles.headerIcon}>
-          <Icon name="user" size={RFPercentage(4)} color="#000" />
+        <Icon name="angle-left" size={RFPercentage(4)} color="#000" />
         </Pressable>
         <View style={styles.headerLogo}>
           <Text style={styles.logoText}>Cookielicia</Text>
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'hidden', // Garante que a imagem respeite as bordas arredondadas
+    overflow: 'hidden', 
   },
   headerContent: {
     flexDirection: 'row',
