@@ -24,6 +24,9 @@ export default function Home() {
           <Text style={styles.headerLink}>Ver mais</Text>
         </Pressable>
       </View>
+
+      <ProductCarousel />
+
       <FooterMenu />
     </View>
   );

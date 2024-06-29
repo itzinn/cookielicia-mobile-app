@@ -1,13 +1,16 @@
 import { StyleSheet, View, TextInput } from 'react-native';
 
-export default function UserInput({ placeholder }) {
+export default function UserInput({ placeholder, value, onChangeText, secureTextEntry }) {
   return (
     <View style={styles.inputContainer}>
-        <TextInput 
-          style={styles.input} 
-          placeholder={placeholder}
-          placeholderTextColor="#827f80"
-        />
+      <TextInput
+        style={styles.input}
+        placeholder={placeholder}
+        placeholderTextColor="#827f80"
+        value={value}
+        onChangeText={onChangeText}
+        secureTextEntry={secureTextEntry}
+      />
     </View>
   );
 }
@@ -20,7 +23,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 3,
-    marginBottom: '20px',
+    marginBottom: 20,
   },
   input: {
     borderRadius: 10,
