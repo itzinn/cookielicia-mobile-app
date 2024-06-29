@@ -9,6 +9,7 @@ export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
+  const [subtotal, setSubtotal] = useState(0);
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -20,9 +21,10 @@ export default function CartPage() {
         setCartItems(data);
 
         // Calculate total
-        const subtotal = data.reduce((sum, item) => sum + parseFloat(item.newPrice.replace('R$', '').replace(',', '.')), 0);
+        const subtotal = data.reduce((sum, item) => sum + parseFloat(item.newPrice.replace('R$', '').replace(',', '.')) * item.quantity, 0);
         const deliveryFee = 3.00;
         const serviceFee = 0.00;
+        setSubtotal(subtotal);
         setTotal(subtotal + deliveryFee + serviceFee);
       } catch (error) {
         console.error('Erro ao buscar itens do carrinho:', error);
@@ -50,6 +52,7 @@ export default function CartPage() {
               title={item.title}
               description={item.description}
               price={`${item.newPrice}`}
+              quantity={item.quantity} // Passar a quantidade para o CookieCard
             />
           </View>
         ))}
@@ -60,7 +63,7 @@ export default function CartPage() {
           <Text style={styles.summaryTitle}>Resumo do Pedido</Text>
           <View style={styles.summaryRow}>
             <Text style={styles.summaryText}>Subtotal</Text>
-            <Text style={styles.summaryText}>R$ {total.toFixed(2)}</Text>
+            <Text style={styles.summaryText}>R$ {subtotal.toFixed(2)}</Text>
           </View>
           <View style={styles.summaryRow}>
             <Text style={styles.summaryText}>Taxa de entrega</Text>

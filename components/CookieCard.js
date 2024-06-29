@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 
-export default function CookieCard({ image, title, description, price }) {
+export default function CookieCard({ image, title, description, price, quantity: initialQuantity }) {
   useEffect(() => {
     const link = document.createElement('link');
     link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap';
@@ -9,11 +9,11 @@ export default function CookieCard({ image, title, description, price }) {
     document.head.appendChild(link);
   }, []);
 
-
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(initialQuantity);
 
   const increaseQuantity = () => setQuantity(quantity + 1);
   const decreaseQuantity = () => setQuantity(quantity > 1 ? quantity - 1 : 1);
+
   return (
     <View style={styles.card}>
       <Image source={image} style={styles.cookieIcon} />
@@ -22,10 +22,10 @@ export default function CookieCard({ image, title, description, price }) {
         <Text style={styles.description}>{description}</Text>
         <Text style={styles.price}>{price}</Text>
         <div style={styles.quantityContainer}>
-            <button style={styles.quantityButton} onClick={decreaseQuantity}>-</button>
-            <span style={styles.quantity}>{quantity}</span>
-            <button style={styles.quantityButton} onClick={increaseQuantity}>+</button>
-          </div>
+          <button style={styles.quantityButton} onClick={decreaseQuantity}>-</button>
+          <span style={styles.quantity}>{quantity}</span>
+          <button style={styles.quantityButton} onClick={increaseQuantity}>+</button>
+        </div>
       </View>
     </View>
   );

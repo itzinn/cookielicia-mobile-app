@@ -115,17 +115,24 @@ app.get('/cookies', (req, res) => {
   });
 });
 
-// Adicionar item ao carrinho
+
 app.post('/add-to-cart', (req, res) => {
   const { productId } = req.body;
-  
+
   // Inicializa o carrinho na sessão se não existir
   if (!req.session.cart) {
     req.session.cart = [];
   }
 
-  // Adiciona o produto ao carrinho
-  req.session.cart.push(productId);
+  // Verifica se o item já existe no carrinho
+  const itemIndex = req.session.cart.findIndex(item => item.productId === productId);
+  if (itemIndex > -1) {
+    // Se o item já existe, incrementa a quantidade
+    req.session.cart[itemIndex].quantity += 1;
+  } else {
+    // Se o item não existe, adiciona-o com quantidade 1
+    req.session.cart.push({ productId, quantity: 1 });
+  }
 
   res.json({ message: 'Produto adicionado ao carrinho', cart: req.session.cart });
 });
@@ -136,22 +143,28 @@ app.get('/cart', (req, res) => {
 });
 
 app.get('/cart-details', (req, res) => {
-  if (!req.session.cart) {
+  if (!req.session.cart || req.session.cart.length === 0) {
     return res.json([]);
   }
 
-  console.log(req.session.cart)
+  const productIds = req.session.cart.map(item => item.productId);
+  const sql = `SELECT * FROM cookies WHERE id IN (${productIds.map(() => '?').join(',')})`;
 
-  const placeholders = req.session.cart.map(() => '?').join(',');
-  const sql = `SELECT * FROM cookies WHERE id IN (${placeholders})`;
-
-  db.all(sql, req.session.cart, (err, rows) => {
+  db.all(sql, productIds, (err, rows) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
-    res.json(rows);
+
+    // Map each row to include quantity from session cart
+    const cartDetails = rows.map(row => {
+      const cartItem = req.session.cart.find(item => item.productId === row.id);
+      return { ...row, quantity: cartItem.quantity };
+    });
+
+    res.json(cartDetails);
   });
 });
+
 
 
 // Start the server
