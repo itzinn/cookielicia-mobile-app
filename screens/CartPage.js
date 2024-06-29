@@ -37,25 +37,25 @@ export default function CartPage() {
   }, []);
 
   const handleQuantityChange = (productId, newQuantity) => {
-    setCartItems(prevItems => 
-      prevItems.map(item => 
-        item.productId === productId ? { ...item, quantity: newQuantity } : item
+
+    setCartItems(prevItems =>
+      prevItems.map(item =>
+        item.id === productId ? { ...item, quantity: newQuantity } : item
       )
     );
-
-    // Recalculate subtotal and total
-    const newSubtotal = cartItems.reduce((sum, item) => 
-      item.productId === productId 
+  
+    const newSubtotal = cartItems.reduce((sum, item) =>
+      item.id === productId
         ? sum + parseFloat(item.newPrice.replace('R$', '').replace(',', '.')) * newQuantity
         : sum + parseFloat(item.newPrice.replace('R$', '').replace(',', '.')) * item.quantity,
       0
     );
-
+  
     const deliveryFee = 3.00;
     const serviceFee = 0.00;
     setSubtotal(newSubtotal);
     setTotal(newSubtotal + deliveryFee + serviceFee);
-  };
+  };  
 
   if (loading) {
     return <Text>Carregando...</Text>;
