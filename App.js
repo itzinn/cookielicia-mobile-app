@@ -3,9 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './screens/Login';
 import Register from './screens/Register';
 import Home from './screens/Home';
-import Profile from './screens/Profile';
 import CartPage from './screens/CartPage';
-import ProductPage from './screens/ProductPage';
 import OrderStatus from './screens/OrderStatus';
 
 
@@ -16,10 +14,8 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="/orderStatus" element={<OrderStatus />} />
           <Route path="/cartpage" element={<CartPage />} />
-          <Route path="/productpage" element={<ProductPage />} />
         </Routes>
     
     </Router>

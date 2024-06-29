@@ -23,8 +23,12 @@ const CookieCard = () => {
           <h2 style={styles.title}>Tradicional Gotas de Chocolate</h2>
           <p style={styles.description}>Massa tradicional com deliciosas gotas de chocolate ao leite</p>
           <p style={styles.price}>R$ 10,00</p>
+          <div style={styles.quantityContainer}>
+            <button style={styles.quantityButton} onClick={decreaseQuantity}>-</button>
+            <span style={styles.quantity}>{quantity}</span>
+            <button style={styles.quantityButton} onClick={increaseQuantity}>+</button>
+          </div>
         </div>
-       
       </div>
     </div>
   );
@@ -78,12 +82,16 @@ const styles = {
     fontFamily: 'Poppins, sans-serif',
   },
   quantityContainer: {
+    position: 'absolute',
+    right: '10px', 
+    bottom: '-1px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#FCB040',
     borderRadius: '100%',
-    padding: '5px 10px',
+    padding: '17px 10px',
+    width: '45px',
     boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
     marginTop: '10px',
   },
