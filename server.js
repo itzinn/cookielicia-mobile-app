@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
-const cors = require('cors'); // Import the cors package
+const cors = require('cors');
+const session = require('express-session'); // Import express-session
 
 const app = express();
 const port = 3000;
@@ -12,7 +13,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Enable CORS for the specified origin
 const corsOptions = {
   origin: 'http://localhost:8081',
-  optionsSuccessStatus: 200
+  methods: ['GET', 'POST'],
+  credentials: true, // Isso permite que cookies sejam incluídos
 };
 
 app.use(cors(corsOptions));
@@ -32,6 +34,14 @@ db.serialize(() => {
   `);
 });
 
+// Configure session middleware
+app.use(session({
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Use secure: true in production
+}));
+
 // Login endpoint
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
@@ -42,6 +52,8 @@ app.post('/login', (req, res) => {
       if (err) {
         res.status(500).json({ message: 'Erro no servidor' });
       } else if (row) {
+        // Save user info in the session
+        req.session.user = { username: row.username, id: row.id, email: row.email };
         res.json({ message: 'Login bem-sucedido' });
       } else {
         res.status(401).json({ message: 'Credenciais inválidas' });
@@ -54,18 +66,15 @@ app.post('/login', (req, res) => {
 app.post('/register', (req, res) => {
   const { username, email, password } = req.body;
   
-  // Check if all fields are provided
   if (!username || !email || !password) {
     return res.status(400).json({ message: 'Todos os campos são obrigatórios' });
   }
 
-  // Insert the new user into the database
   db.run(
     'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
     [username, email, password],
     function (err) {
       if (err) {
-        // Check if the error is because the email is already taken
         if (err.code === 'SQLITE_CONSTRAINT') {
           return res.status(409).json({ message: 'Email já está em uso' });
         }
@@ -75,6 +84,16 @@ app.post('/register', (req, res) => {
     }
   );
 });
+
+// Exemplo de rota protegida no back-end
+app.get('/home', (req, res) => {
+  if (req.session.user) {
+    res.status(200).json({ message: 'Usuário autenticado' });
+  } else {
+    res.status(401).json({ message: 'Não autorizado' });
+  }
+});
+
 
 // Start the server
 app.listen(port, () => {
