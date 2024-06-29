@@ -49,7 +49,7 @@ export default function CartPage() {
               image={require('../assets/cookie-icon.png')}
               title={item.title}
               description={item.description}
-              price={`R$ ${item.newPrice}`}
+              price={`${item.newPrice}`}
             />
           </View>
         ))}
@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
     maxWidth: 600,
     marginVertical: 10,
     paddingHorizontal: 16,
+    margin: 100,
   },
   addButton: {
     backgroundColor: '#FFA726',

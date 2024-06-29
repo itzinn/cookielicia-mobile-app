@@ -20,6 +20,7 @@ function createTables() {
     CREATE TABLE IF NOT EXISTS cookies (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
+      description TEXT NOT NULL,
       oldPrice TEXT NOT NULL,
       newPrice TEXT NOT NULL
     )
@@ -34,10 +35,10 @@ function seedDatabase() {
     // stmt.finalize();
 
     // Inserir dados na tabela cookies
-    const cookieStmt = db.prepare(`INSERT INTO cookies (title, oldPrice, newPrice) VALUES (?, ?, ?)`);
-    cookieStmt.run('Cookie de Chocolate', 'R$ 12,00', 'R$ 8,00');
-    cookieStmt.run('Cookie de Baunilha', 'R$ 10,00', 'R$ 7,00');
-    cookieStmt.run('Cookie de Aveia', 'R$ 8,00', 'R$ 5,00');
+    const cookieStmt = db.prepare(`INSERT INTO cookies (title, description, oldPrice, newPrice) VALUES (?, ?, ?, ?)`);
+    cookieStmt.run('Cookie de Chocolate', 'a','R$ 12,00', 'R$ 8,00');
+    cookieStmt.run('Cookie de Baunilha', 'a','R$ 10,00', 'R$ 7,00');
+    cookieStmt.run('Cookie de Aveia', 'a', 'R$ 8,00', 'R$ 5,00');
     cookieStmt.finalize();
   });
 
