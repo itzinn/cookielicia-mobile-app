@@ -4,12 +4,9 @@ import Login from './screens/Login';
 import Register from './screens/Register';
 import Home from './screens/Home';
 import Profile from './screens/Profile';
-<<<<<<< HEAD
 import CartPage from './screens/CartPage';
 import ProductPage from './screens/ProductPage';
-=======
-import OrderStatus from './screens/OrderStatus';import CartPage from './screens/CartPage';
->>>>>>> dd46b9eb60b6a0022ea287708f27341be03fd719
+import OrderStatus from './screens/OrderStatus';
 
 
 export default function App() {
