@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
-export default function CookieCard({ image, title, description, price, quantity: initialQuantity }) {
+export default function CookieCard({ image, title, description, price, quantity: initialQuantity, productId, onQuantityChange }) {
   useEffect(() => {
     const link = document.createElement('link');
     link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap';
@@ -11,8 +11,51 @@ export default function CookieCard({ image, title, description, price, quantity:
 
   const [quantity, setQuantity] = useState(initialQuantity);
 
-  const increaseQuantity = () => setQuantity(quantity + 1);
-  const decreaseQuantity = () => setQuantity(quantity > 1 ? quantity - 1 : 1);
+  const increaseQuantity = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/increment-quantity', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ productId }),
+        credentials: 'include' // Ensure cookies are sent with the request
+      });
+
+      if (response.ok) {
+        setQuantity(quantity + 1);
+        onQuantityChange(productId, quantity + 1);
+      } else {
+        console.error('Erro ao incrementar a quantidade');
+      }
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+    }
+  };
+
+  const decreaseQuantity = async () => {
+    if (quantity > 1) {
+      try {
+        const response = await fetch('http://localhost:3000/decrement-quantity', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ productId }),
+          credentials: 'include' // Ensure cookies are sent with the request
+        });
+
+        if (response.ok) {
+          setQuantity(quantity - 1);
+          onQuantityChange(productId, quantity - 1);
+        } else {
+          console.error('Erro ao decrementar a quantidade');
+        }
+      } catch (error) {
+        console.error('Erro na requisição:', error);
+      }
+    }
+  };
 
   return (
     <View style={styles.card}>
@@ -21,11 +64,13 @@ export default function CookieCard({ image, title, description, price, quantity:
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.description}>{description}</Text>
         <Text style={styles.price}>{price}</Text>
+        <View style={styles.quantityContainer}>
         <div style={styles.quantityContainer}>
           <button style={styles.quantityButton} onClick={decreaseQuantity}>-</button>
           <span style={styles.quantity}>{quantity}</span>
           <button style={styles.quantityButton} onClick={increaseQuantity}>+</button>
         </div>
+        </View>
       </View>
     </View>
   );

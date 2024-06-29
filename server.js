@@ -165,6 +165,41 @@ app.get('/cart-details', (req, res) => {
   });
 });
 
+app.post('/increment-quantity', (req, res) => {
+  const { productId } = req.body;
+
+  if (!req.session.cart) {
+    return res.status(400).json({ message: 'Carrinho não encontrado' });
+  }
+
+  const itemIndex = req.session.cart.findIndex(item => item.productId === productId);
+  if (itemIndex > -1) {
+    req.session.cart[itemIndex].quantity += 1;
+    res.json({ message: 'Quantidade incrementada', cart: req.session.cart });
+  } else {
+    res.status(404).json({ message: 'Produto não encontrado no carrinho' });
+  }
+});
+
+app.post('/decrement-quantity', (req, res) => {
+  const { productId } = req.body;
+
+  if (!req.session.cart) {
+    return res.status(400).json({ message: 'Carrinho não encontrado' });
+  }
+
+  const itemIndex = req.session.cart.findIndex(item => item.productId === productId);
+  if (itemIndex > -1) {
+    if (req.session.cart[itemIndex].quantity > 1) {
+      req.session.cart[itemIndex].quantity -= 1;
+      res.json({ message: 'Quantidade decrementada', cart: req.session.cart });
+    } else {
+      res.status(400).json({ message: 'Quantidade mínima atingida' });
+    }
+  } else {
+    res.status(404).json({ message: 'Produto não encontrado no carrinho' });
+  }
+});
 
 
 // Start the server

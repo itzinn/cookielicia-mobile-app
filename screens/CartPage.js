@@ -36,6 +36,27 @@ export default function CartPage() {
     fetchCartItems();
   }, []);
 
+  const handleQuantityChange = (productId, newQuantity) => {
+    setCartItems(prevItems => 
+      prevItems.map(item => 
+        item.productId === productId ? { ...item, quantity: newQuantity } : item
+      )
+    );
+
+    // Recalculate subtotal and total
+    const newSubtotal = cartItems.reduce((sum, item) => 
+      item.productId === productId 
+        ? sum + parseFloat(item.newPrice.replace('R$', '').replace(',', '.')) * newQuantity
+        : sum + parseFloat(item.newPrice.replace('R$', '').replace(',', '.')) * item.quantity,
+      0
+    );
+
+    const deliveryFee = 3.00;
+    const serviceFee = 0.00;
+    setSubtotal(newSubtotal);
+    setTotal(newSubtotal + deliveryFee + serviceFee);
+  };
+
   if (loading) {
     return <Text>Carregando...</Text>;
   }
@@ -51,8 +72,10 @@ export default function CartPage() {
               image={require('../assets/cookie-icon.png')}
               title={item.title}
               description={item.description}
-              price={`${item.newPrice}`}
-              quantity={item.quantity} // Passar a quantidade para o CookieCard
+              price={item.newPrice}
+              quantity={item.quantity}
+              productId={item.id} // Passe o productId para o CookieCard
+              onQuantityChange={handleQuantityChange}
             />
           </View>
         ))}
@@ -85,6 +108,8 @@ export default function CartPage() {
     </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
