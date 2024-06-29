@@ -1,52 +1,58 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import Header from '../components/Header';
-import CookieCard from '../components/CookieCart';
+import CookieCard from '../components/CookieCard';
 
-const cookieIcon = require('../assets/cookie-icon.png');
 const { width } = Dimensions.get('window');
 
 export default function CartPage() {
-  const item1 = {
-    image: cookieIcon,
-    title: 'Tradicional Gotas de Chocolate',
-    description: 'Massa tradicional com deliciosas gotas de chocolate ao leite',
-    price: 10.00,
-  };
+  const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [total, setTotal] = useState(0);
 
-  const item2 = {
-    image: cookieIcon,
-    title: 'Vegano',
-    description: 'Massa vegana com gotas de chocolate belga 70% cacau',
-    price: 8.00,
-  };
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/cart-details', {
+          credentials: 'include', // Ensures cookies are sent with the request
+        });
+        const data = await response.json();
+        setCartItems(data);
 
-  const subtotal = item1.price + item2.price;
-  const deliveryFee = 3.00;
-  const serviceFee = 0.00;
-  const total = subtotal + deliveryFee + serviceFee;
+        // Calculate total
+        const subtotal = data.reduce((sum, item) => sum + parseFloat(item.newPrice.replace('R$', '').replace(',', '.')), 0);
+        const deliveryFee = 3.00;
+        const serviceFee = 0.00;
+        setTotal(subtotal + deliveryFee + serviceFee);
+      } catch (error) {
+        console.error('Erro ao buscar itens do carrinho:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCartItems();
+  }, []);
+
+  if (loading) {
+    return <Text>Carregando...</Text>;
+  }
 
   return (
     <View style={styles.container}>
       <Header />
       <ScrollView contentContainerStyle={styles.scrollView}>
-        <Text style={styles.title}>Sua Mochila</Text>
-        <View style={styles.cookieCardContainer}>
-          <CookieCard 
-            image={item1.image}
-            title={item1.title}
-            description={item1.description}
-            price={`R$ ${item1.price.toFixed(2)}`} 
-          />
-        </View>
-        <View style={styles.cookieCardContainer}>
-          <CookieCard 
-            image={item2.image}
-            title={item2.title}
-            description={item2.description}
-            price={`R$ ${item2.price.toFixed(2)}`} 
-          />
-        </View>
+        <Text style={styles.title}>Seu Carrinho</Text>
+        {cartItems.map(item => (
+          <View style={styles.cookieCardContainer} key={item.id}>
+            <CookieCard 
+              image={require('../assets/cookie-icon.png')}
+              title={item.title}
+              description={item.description}
+              price={`R$ ${item.newPrice}`}
+            />
+          </View>
+        ))}
         <TouchableOpacity style={styles.addButton}>
           <Text style={styles.addButtonText}>Adicionar mais Itens</Text>
         </TouchableOpacity>
@@ -54,15 +60,15 @@ export default function CartPage() {
           <Text style={styles.summaryTitle}>Resumo do Pedido</Text>
           <View style={styles.summaryRow}>
             <Text style={styles.summaryText}>Subtotal</Text>
-            <Text style={styles.summaryText}>R$ {subtotal.toFixed(2)}</Text>
+            <Text style={styles.summaryText}>R$ {total.toFixed(2)}</Text>
           </View>
           <View style={styles.summaryRow}>
             <Text style={styles.summaryText}>Taxa de entrega</Text>
-            <Text style={styles.summaryText}>R$ {deliveryFee.toFixed(2)}</Text>
+            <Text style={styles.summaryText}>R$ 3,00</Text>
           </View>
           <View style={styles.summaryRow}>
             <Text style={styles.summaryText}>Taxa de Serviço</Text>
-            <Text style={styles.summaryText}>R$ {serviceFee.toFixed(2)}</Text>
+            <Text style={styles.summaryText}>R$ 0,00</Text>
           </View>
           <View style={styles.summaryRow}>
             <Text style={styles.summaryTotalText}>Total</Text>
@@ -154,4 +160,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-

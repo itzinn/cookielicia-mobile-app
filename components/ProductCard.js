@@ -6,10 +6,33 @@ export default function ProductCard({ item }) {
     return <Text>Erro: item não encontrado</Text>;
   }
 
-  img = require('../assets/cookie-icon.png')
+  const img = require('../assets/cookie-icon.png');
+
+  const addToCart = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/add-to-cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // This ensures cookies are sent with the request
+        body: JSON.stringify({ productId: item.id }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert(data.message);
+      } else {
+        alert('Erro ao adicionar ao carrinho');
+      }
+    } catch (error) {
+      console.error('Erro:', error);
+      alert('Erro ao adicionar ao carrinho');
+    }
+  };
 
   return (
-    <Pressable>
+    <Pressable onPress={addToCart}>
       <View style={styles.card}>
         <Image source={img} style={styles.image} />
         <Text style={styles.title}>{item.title}</Text>
@@ -42,7 +65,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginTop:10,
+    marginTop: 10,
     marginBottom: 10,
   },
   oldPrice: {

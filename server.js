@@ -115,6 +115,42 @@ app.get('/cookies', (req, res) => {
   });
 });
 
+// Adicionar item ao carrinho
+app.post('/add-to-cart', (req, res) => {
+  const { productId } = req.body;
+  
+  // Inicializa o carrinho na sessão se não existir
+  if (!req.session.cart) {
+    req.session.cart = [];
+  }
+
+  // Adiciona o produto ao carrinho
+  req.session.cart.push(productId);
+
+  res.json({ message: 'Produto adicionado ao carrinho', cart: req.session.cart });
+});
+
+// Obter itens do carrinho
+app.get('/cart', (req, res) => {
+  res.json(req.session.cart || []);
+});
+
+app.get('/cart-details', (req, res) => {
+  if (!req.session.cart) {
+    return res.json([]);
+  }
+
+  const placeholders = req.session.cart.map(() => '?').join(',');
+  const sql = `SELECT * FROM cookies WHERE id IN (${placeholders})`;
+
+  db.all(sql, req.session.cart, (err, rows) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(rows);
+  });
+});
+
 
 // Start the server
 app.listen(port, () => {
