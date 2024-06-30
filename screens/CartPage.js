@@ -15,7 +15,7 @@ export default function CartPage() {
     const fetchCartItems = async () => {
       try {
         const response = await fetch('http://localhost:3000/cart-details', {
-          credentials: 'include', // Ensures cookies are sent with the request
+          credentials: 'include', 
         });
         const data = await response.json();
         setCartItems(data);
