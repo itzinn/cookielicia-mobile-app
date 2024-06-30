@@ -17,7 +17,7 @@ export default function CartPage() {
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
-        const response = await fetch('http://localhost:3000/check-authentication', {
+        const response = await fetch('http://localhost:3000/home', {
           method: 'GET',
           credentials: 'include' // Incluir cookies na requisição
         });

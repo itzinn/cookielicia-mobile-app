@@ -95,7 +95,6 @@ app.post('/register', (req, res) => {
   );
 });
 
-// Exemplo de rota protegida no back-end
 app.get('/home', (req, res) => {
   if (req.session.user) {
     res.status(200).json({ message: 'Usuário autenticado' });

@@ -70,6 +70,27 @@ export default function CompleteOrder() {
     fetchUserAddress();
   }, [deliveryMethod]);
 
+  const handleSaveAddress = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/update-address', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ address }),
+        credentials: 'include', // Certifica-se de que os cookies são enviados com a requisição
+      });
+
+      if (response.ok) {
+        alert('Endereço salvo com sucesso');
+      } else {
+        console.error('Erro ao salvar o endereço');
+      }
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+    }
+  };
+
   const handleCompleteOrder = async () => {
     try {
       const response = await fetch('http://localhost:3000/complete-order', {
@@ -133,6 +154,9 @@ export default function CompleteOrder() {
               value={address}
               onChangeText={setAddress}
             />
+            <TouchableOpacity style={styles.button} onPress={handleSaveAddress}>
+              <Text style={styles.buttonText}>Salvar Endereço</Text>
+            </TouchableOpacity>
           </View>
         )}
 
