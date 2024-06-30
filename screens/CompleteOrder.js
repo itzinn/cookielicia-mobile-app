@@ -10,6 +10,8 @@ export default function CompleteOrder() {
   const [totalAmount, setTotalAmount] = useState(0);
   const [loading, setLoading] = useState(true);
 
+  const navigateToOrderStatus = () => window.location.href = '/orderStatus';
+
   useEffect(() => {
     const fetchCartDetails = async () => {
       try {
@@ -58,7 +60,8 @@ export default function CompleteOrder() {
       });
       const data = await response.json();
       if (response.ok) {
-        alert('Pedido criado com sucesso! ID do pedido: ' + data.orderId);
+        //alert('Pedido criado com sucesso! ID do pedido: ' + data.orderId);
+        navigateToOrderStatus();
       } else {
         alert('Erro ao criar pedido: ' + data.message);
       }

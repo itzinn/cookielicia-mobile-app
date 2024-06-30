@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Pressable, Dimensions } from 'react-native';
 import Header from '../components/Header';
 import CookieCard from '../components/CookieCard';
 
@@ -10,6 +10,8 @@ export default function CartPage() {
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
   const [subtotal, setSubtotal] = useState(0);
+
+  const navigateToCompleteOrder = () => window.location.href = '/completeOrder';
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -116,7 +118,7 @@ export default function CartPage() {
           </View>
         </View>
       </ScrollView>
-      <TouchableOpacity style={styles.continueButton}>
+      <TouchableOpacity style={styles.continueButton} onPress={navigateToCompleteOrder}>
         <Text style={styles.continueButtonText}>Continuar</Text>
       </TouchableOpacity>
     </View>
