@@ -265,6 +265,38 @@ app.get('/user-details', (req, res) => {
   });
 });
 
+// Complete Order Route
+app.post('/complete-order', (req, res) => {
+  const { deliveryMethod, address, cartItems, totalAmount } = req.body;
+  const userId = req.session.user.id;
+
+  db.run(`
+    INSERT INTO orders (user_id, total_amount, delivery_method, address)
+    VALUES (?, ?, ?, ?)
+  `, [userId, totalAmount, deliveryMethod, deliveryMethod === 'Retirada' ? null : address], function (err) {
+    if (err) {
+      return res.status(500).json({ message: 'Erro ao criar pedido', error: err.message });
+    }
+
+    const orderId = this.lastID;
+    const orderItems = cartItems.map(item => [orderId, item.id, item.quantity, parseFloat(item.newPrice.replace('R$', '').replace(',', '.'))]);
+
+    const placeholders = orderItems.map(() => '(?, ?, ?, ?)').join(',');
+    const flatValues = orderItems.reduce((acc, item) => acc.concat(item), []);
+
+    db.run(`
+      INSERT INTO order_items (order_id, cookie_id, quantity, price)
+      VALUES ${placeholders}
+    `, flatValues, (err) => {
+      if (err) {
+        return res.status(500).json({ message: 'Erro ao criar itens do pedido', error: err.message });
+      }
+
+      res.json({ message: 'Pedido criado com sucesso', orderId });
+    });
+  });
+});
+
 
 // Start the server
 app.listen(port, () => {

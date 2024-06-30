@@ -1,99 +1,134 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
-
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, CheckBox } from 'react-native';
 import FooterMenu from '../components/FooterMenu';
 import Header from '../components/Header';
 
 export default function CompleteOrder() {
   const [address, setAddress] = useState('');
+  const [deliveryMethod, setDeliveryMethod] = useState('Delivery');
+  const [cartItems, setCartItems] = useState([]);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserDetails = async () => {
+    const fetchCartDetails = async () => {
       try {
-        const response = await fetch('http://localhost:3000/user-details', {
-          credentials: 'include', // Certifica-se de que os cookies são enviados com a requisição
+        const response = await fetch('http://localhost:3000/cart-details', {
+          credentials: 'include'
         });
         const data = await response.json();
-        if (data.address) {
-          setAddress(data.address);
-        }
+        setCartItems(data);
+
+        const subtotal = data.reduce((sum, item) => sum + parseFloat(item.newPrice.replace('R$', '').replace(',', '.')) * item.quantity, 0);
+        const deliveryFee = deliveryMethod === 'Retirada' ? 0 : 3.00;
+        setTotalAmount(subtotal + deliveryFee);
       } catch (error) {
-        console.error('Erro ao buscar os detalhes do usuário:', error);
+        console.error('Erro ao buscar detalhes do carrinho:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchUserDetails();
-  }, []);
+    fetchCartDetails();
 
-  const handleSaveAddress = async () => {
+    const fetchUserAddress = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/user-address', {
+          credentials: 'include'
+        });
+        const data = await response.json();
+        setAddress(data.address);
+      } catch (error) {
+        console.error('Erro ao buscar endereço do usuário:', error);
+      }
+    };
+
+    fetchUserAddress();
+  }, [deliveryMethod]);
+
+  const handleCompleteOrder = async () => {
     try {
-      const response = await fetch('http://localhost:3000/update-address', {
+      const response = await fetch('http://localhost:3000/complete-order', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ address }),
-        credentials: 'include', // Certifica-se de que os cookies são enviados com a requisição
+        credentials: 'include',
+        body: JSON.stringify({ deliveryMethod, address, cartItems, totalAmount })
       });
-
+      const data = await response.json();
       if (response.ok) {
-        alert('Endereço salvo com sucesso');
+        alert('Pedido criado com sucesso! ID do pedido: ' + data.orderId);
       } else {
-        console.error('Erro ao salvar o endereço');
+        alert('Erro ao criar pedido: ' + data.message);
       }
     } catch (error) {
-      console.error('Erro na requisição:', error);
+      console.error('Erro ao criar pedido:', error);
+      alert('Erro ao criar pedido');
     }
   };
+
+  if (loading) {
+    return <Text>Carregando...</Text>;
+  }
 
   return (
     <View style={styles.container}>
       <Header />
-      
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>Finalizar</Text>
         
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Método de entrega</Text>
           <View style={styles.optionContainer}>
-            <Text style={styles.optionText}>Deliver</Text>
+            <CheckBox
+              value={deliveryMethod === 'Delivery'}
+              onValueChange={() => setDeliveryMethod('Delivery')}
+            />
+            <Text style={styles.optionText}>Delivery</Text>
           </View>
           <View style={styles.optionContainer}>
+            <CheckBox
+              value={deliveryMethod === 'Retirada'}
+              onValueChange={() => setDeliveryMethod('Retirada')}
+            />
             <Text style={styles.optionText}>Retirada</Text>
           </View>
-          <Text style={styles.deliveryFee}>Taxa de entrega - R$ 3,00</Text>
+          {deliveryMethod === 'Delivery' && (
+            <Text style={styles.deliveryFee}>Taxa de entrega - R$ 3,00</Text>
+          )}
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Endereço</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Digite seu endereço"
-            value={address}
-            onChangeText={setAddress}
-          />
-          <TouchableOpacity style={styles.button} onPress={handleSaveAddress}>
-            <Text style={styles.buttonText}>Salvar Endereço</Text>
-          </TouchableOpacity>
-        </View>
+        {deliveryMethod === 'Delivery' && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Endereço</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Digite seu endereço"
+              value={address}
+              onChangeText={setAddress}
+            />
+          </View>
+        )}
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Pedido</Text>
-          <Text style={styles.orderItem}>1x Tradicional Gotas de Chocolate - R$10,00</Text>
-          <Text style={styles.orderItem}>1x Vegano - R$8,00</Text>
+          {cartItems.map((item) => (
+            <Text key={item.id} style={styles.orderItem}>{item.quantity}x {item.title} - {item.newPrice}</Text>
+          ))}
         </View>
 
-        <Text style={styles.total}>R$ 21,00 / 2 Itens</Text>
+        <Text style={styles.total}>R$ {totalAmount.toFixed(2)} / {cartItems.length} Itens</Text>
 
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleCompleteOrder}>
           <Text style={styles.buttonText}>FINALIZAR</Text>
         </TouchableOpacity>
       </ScrollView>
-      
       <FooterMenu />
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
