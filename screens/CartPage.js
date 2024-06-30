@@ -37,7 +37,6 @@ export default function CartPage() {
   }, []);
 
   const handleQuantityChange = (productId, newQuantity) => {
-
     setCartItems(prevItems =>
       prevItems.map(item =>
         item.id === productId ? { ...item, quantity: newQuantity } : item
@@ -56,6 +55,20 @@ export default function CartPage() {
     setSubtotal(newSubtotal);
     setTotal(newSubtotal + deliveryFee + serviceFee);
   };  
+
+  const handleRemoveItem = (productId) => {
+    setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
+    const newSubtotal = cartItems.reduce((sum, item) =>
+      item.id === productId
+        ? sum
+        : sum + parseFloat(item.newPrice.replace('R$', '').replace(',', '.')) * item.quantity,
+      0
+    );
+    const deliveryFee = 3.00;
+    const serviceFee = 0.00;
+    setSubtotal(newSubtotal);
+    setTotal(newSubtotal + deliveryFee + serviceFee);
+  };
 
   if (loading) {
     return <Text>Carregando...</Text>;
@@ -76,6 +89,7 @@ export default function CartPage() {
               quantity={item.quantity}
               productId={item.id} // Passe o productId para o CookieCard
               onQuantityChange={handleQuantityChange}
+              onRemoveItem={handleRemoveItem} // Pass the handleRemoveItem function
             />
           </View>
         ))}

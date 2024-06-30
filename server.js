@@ -201,6 +201,27 @@ app.post('/decrement-quantity', (req, res) => {
   }
 });
 
+// Remove item endpoint
+app.post('/remove-item', (req, res) => {
+  const { productId } = req.body;
+
+  if (!req.session.cart) {
+    return res.status(400).json({ message: 'Cart not found' });
+  }
+
+  // Convert productId to number if necessary
+  const productIdNumber = Number(productId);
+
+  const originalLength = req.session.cart.length;
+
+  req.session.cart = req.session.cart.filter(item => item.productId !== productIdNumber);
+
+  if (req.session.cart.length === originalLength) {
+    return res.status(404).json({ message: 'Product not found in cart' });
+  }
+
+  res.json({ message: 'Item removed from cart', cart: req.session.cart });
+});
 
 // Start the server
 app.listen(port, () => {
