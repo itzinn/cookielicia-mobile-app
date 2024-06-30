@@ -3,8 +3,11 @@ import { StyleSheet, View, Text, ImageBackground, Pressable } from 'react-native
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 
-
 export default function FooterMenu() {
+
+  const navigateToCart = () => window.location.href = '/cartpage';
+  const navigateToHome = () => window.location.href = '/home';
+
   return (
       <View style={styles.footerMenu}>
         <ImageBackground
@@ -16,10 +19,10 @@ export default function FooterMenu() {
 
           <View style={styles.footerContent}>
           <Pressable style={styles.footerIcon}>
-          <Icon name="home" size={RFPercentage(4)} color="#000" />
+          <Icon name="home" size={RFPercentage(4)} onPress={navigateToHome} color="#000" />
         </Pressable>
         <Pressable style={styles.footerIcon}>
-          <Icon name="shopping-cart" size={RFPercentage(4)} color="#000" />
+          <Icon name="shopping-cart" size={RFPercentage(4)} onPress={navigateToCart} color="#000" />
         </Pressable>
         <Pressable style={styles.footerIcon}>
           <Icon name="search" size={RFPercentage(4)} color="#000" />
