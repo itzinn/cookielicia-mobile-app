@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 
 import FooterMenu from '../components/FooterMenu';
@@ -6,6 +6,45 @@ import Header from '../components/Header';
 
 export default function CompleteOrder() {
   const [address, setAddress] = useState('');
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/user-details', {
+          credentials: 'include', // Certifica-se de que os cookies são enviados com a requisição
+        });
+        const data = await response.json();
+        if (data.address) {
+          setAddress(data.address);
+        }
+      } catch (error) {
+        console.error('Erro ao buscar os detalhes do usuário:', error);
+      }
+    };
+
+    fetchUserDetails();
+  }, []);
+
+  const handleSaveAddress = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/update-address', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ address }),
+        credentials: 'include', // Certifica-se de que os cookies são enviados com a requisição
+      });
+
+      if (response.ok) {
+        alert('Endereço salvo com sucesso');
+      } else {
+        console.error('Erro ao salvar o endereço');
+      }
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -33,6 +72,9 @@ export default function CompleteOrder() {
             value={address}
             onChangeText={setAddress}
           />
+          <TouchableOpacity style={styles.button} onPress={handleSaveAddress}>
+            <Text style={styles.buttonText}>Salvar Endereço</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
@@ -106,6 +148,17 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     width: '80%',
+    textAlign: 'center',
+  },
+  saveButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  saveButtonText: {
+    color: '#fff',
+    fontSize: 16,
     textAlign: 'center',
   },
   orderItem: {

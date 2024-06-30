@@ -223,6 +223,49 @@ app.post('/remove-item', (req, res) => {
   res.json({ message: 'Item removed from cart', cart: req.session.cart });
 });
 
+// Rota para atualizar o endereço do usuário
+app.post('/update-address', (req, res) => {
+  const { address } = req.body;
+  const user = req.session.user; // Obter informações do usuário da sessão
+
+  if (!user) {
+    return res.status(401).json({ message: 'Usuário não autenticado' });
+  }
+
+  const query = `UPDATE users SET address = ? WHERE id = ?`;
+
+  db.run(query, [address, user.id], function(err) {
+    if (err) {
+      console.error('Erro ao atualizar o endereço:', err);
+      return res.status(500).json({ message: 'Erro ao atualizar o endereço' });
+    }
+
+    res.json({ message: 'Endereço atualizado com sucesso' });
+  });
+});
+
+app.get('/user-details', (req, res) => {
+  const user = req.session.user;
+
+  if (!user) {
+    return res.status(401).json({ message: 'Usuário não autenticado' });
+  }
+
+  db.get('SELECT address FROM users WHERE id = ?', [user.id], (err, row) => {
+    if (err) {
+      console.error('Erro ao buscar os detalhes do usuário:', err);
+      return res.status(500).json({ message: 'Erro ao buscar os detalhes do usuário' });
+    }
+
+    if (row) {
+      res.json({ address: row.address });
+    } else {
+      res.status(404).json({ message: 'Usuário não encontrado' });
+    }
+  });
+});
+
+
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
