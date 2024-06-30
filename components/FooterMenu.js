@@ -5,7 +5,7 @@ import { RFPercentage } from 'react-native-responsive-fontsize';
 
 export default function FooterMenu() {
 
-  const navigateToCart = () => window.location.href = '/cartpage';
+  const navigateToCart = () => window.location.href = '/cartPage';
   const navigateToHome = () => window.location.href = '/home';
 
   return (

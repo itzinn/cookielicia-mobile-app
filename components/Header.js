@@ -8,7 +8,7 @@ const isTablet = width >= 600 && height >= 600;
 const headerHeight = 80;
 
 export default function Header() {
-  const navigateToCart = () => window.location.href = '/cartpage';
+  const navigateToCart = () => window.location.href = '/cartPage';
   const navigateBack = () => window.history.back();
 
   return (

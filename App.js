@@ -16,8 +16,8 @@ export default function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
           <Route path="/orderStatus" element={<OrderStatus />} />
-          <Route path="/cartpage" element={<CartPage />} />
-          <Route path="/completeorder" element={<CompleteOrder />} />
+          <Route path="/cartPage" element={<CartPage />} />
+          <Route path="/completeOrder" element={<CompleteOrder />} />
         </Routes>
     
     </Router>
