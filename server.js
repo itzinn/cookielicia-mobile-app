@@ -201,6 +201,102 @@ app.post('/decrement-quantity', (req, res) => {
   }
 });
 
+// Remove item endpoint
+app.post('/remove-item', (req, res) => {
+  const { productId } = req.body;
+
+  if (!req.session.cart) {
+    return res.status(400).json({ message: 'Cart not found' });
+  }
+
+  // Convert productId to number if necessary
+  const productIdNumber = Number(productId);
+
+  const originalLength = req.session.cart.length;
+
+  req.session.cart = req.session.cart.filter(item => item.productId !== productIdNumber);
+
+  if (req.session.cart.length === originalLength) {
+    return res.status(404).json({ message: 'Product not found in cart' });
+  }
+
+  res.json({ message: 'Item removed from cart', cart: req.session.cart });
+});
+
+// Rota para atualizar o endereço do usuário
+app.post('/update-address', (req, res) => {
+  const { address } = req.body;
+  const user = req.session.user; // Obter informações do usuário da sessão
+
+  if (!user) {
+    return res.status(401).json({ message: 'Usuário não autenticado' });
+  }
+
+  const query = `UPDATE users SET address = ? WHERE id = ?`;
+
+  db.run(query, [address, user.id], function(err) {
+    if (err) {
+      console.error('Erro ao atualizar o endereço:', err);
+      return res.status(500).json({ message: 'Erro ao atualizar o endereço' });
+    }
+
+    res.json({ message: 'Endereço atualizado com sucesso' });
+  });
+});
+
+app.get('/user-details', (req, res) => {
+  const user = req.session.user;
+
+  if (!user) {
+    return res.status(401).json({ message: 'Usuário não autenticado' });
+  }
+
+  db.get('SELECT address FROM users WHERE id = ?', [user.id], (err, row) => {
+    if (err) {
+      console.error('Erro ao buscar os detalhes do usuário:', err);
+      return res.status(500).json({ message: 'Erro ao buscar os detalhes do usuário' });
+    }
+
+    if (row) {
+      res.json({ address: row.address });
+    } else {
+      res.status(404).json({ message: 'Usuário não encontrado' });
+    }
+  });
+});
+
+// Complete Order Route
+app.post('/complete-order', (req, res) => {
+  const { deliveryMethod, address, cartItems, totalAmount } = req.body;
+  const userId = req.session.user.id;
+
+  db.run(`
+    INSERT INTO orders (user_id, total_amount, delivery_method, address)
+    VALUES (?, ?, ?, ?)
+  `, [userId, totalAmount, deliveryMethod, deliveryMethod === 'Retirada' ? null : address], function (err) {
+    if (err) {
+      return res.status(500).json({ message: 'Erro ao criar pedido', error: err.message });
+    }
+
+    const orderId = this.lastID;
+    const orderItems = cartItems.map(item => [orderId, item.id, item.quantity, parseFloat(item.newPrice.replace('R$', '').replace(',', '.'))]);
+
+    const placeholders = orderItems.map(() => '(?, ?, ?, ?)').join(',');
+    const flatValues = orderItems.reduce((acc, item) => acc.concat(item), []);
+
+    db.run(`
+      INSERT INTO order_items (order_id, cookie_id, quantity, price)
+      VALUES ${placeholders}
+    `, flatValues, (err) => {
+      if (err) {
+        return res.status(500).json({ message: 'Erro ao criar itens do pedido', error: err.message });
+      }
+
+      res.json({ message: 'Pedido criado com sucesso', orderId });
+    });
+  });
+});
+
 
 // Start the server
 app.listen(port, () => {
