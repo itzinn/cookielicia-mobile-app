@@ -28,7 +28,6 @@ export default function CompleteOrder() {
         }
       } catch (error) {
         console.error('Erro ao verificar autenticação:', error);
-        // Tratar erro de forma apropriada, se necessário
         window.location.href = '/login'; // Em caso de erro, redireciona para o login
       }
     };
@@ -78,7 +77,7 @@ export default function CompleteOrder() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ address }),
-        credentials: 'include', // Certifica-se de que os cookies são enviados com a requisição
+        credentials: 'include' // Certifica-se de que os cookies são enviados com a requisição
       });
 
       if (response.ok) {
@@ -87,7 +86,7 @@ export default function CompleteOrder() {
         console.error('Erro ao salvar o endereço');
       }
     } catch (error) {
-      console.error('Erro na requisição:', error);
+      console.error('Erro ao salvar o endereço:', error);
     }
   };
 
@@ -103,7 +102,6 @@ export default function CompleteOrder() {
       });
       const data = await response.json();
       if (response.ok) {
-        //alert('Pedido criado com sucesso! ID do pedido: ' + data.orderId);
         navigateToOrderStatus();
       } else {
         alert('Erro ao criar pedido: ' + data.message);
@@ -175,7 +173,7 @@ export default function CompleteOrder() {
       </ScrollView>
       <FooterMenu />
     </View>
-  ):null;
+  ) : null;
 }
 
 const styles = StyleSheet.create({

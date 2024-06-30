@@ -243,7 +243,7 @@ app.post('/update-address', (req, res) => {
   });
 });
 
-app.get('/user-details', (req, res) => {
+app.get('/user-address', (req, res) => {
   const user = req.session.user;
 
   if (!user) {
