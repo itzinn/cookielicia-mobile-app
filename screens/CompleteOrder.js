@@ -9,6 +9,7 @@ export default function CompleteOrder() {
   const [cartItems, setCartItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
 
   const navigateToOrderStatus = () => window.location.href = '/orderStatus';
 

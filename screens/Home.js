@@ -11,7 +11,7 @@ export default function Home() {
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
-        const response = await fetch('http://localhost:3000/home', {
+        const response = await fetch('http://localhost:3000/check-authentication', {
           method: 'GET',
           credentials: 'include' // Incluir cookies na requisição
         });

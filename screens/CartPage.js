@@ -10,10 +10,32 @@ export default function CartPage() {
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
   const [subtotal, setSubtotal] = useState(0);
+  const [authenticated, setAuthenticated] = useState(false);
 
   const navigateToCompleteOrder = () => window.location.href = '/completeOrder';
 
   useEffect(() => {
+    const checkAuthentication = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/check-authentication', {
+          method: 'GET',
+          credentials: 'include' // Incluir cookies na requisição
+        });
+
+        if (response.ok) {
+          setAuthenticated(true); // Atualiza o estado para autenticado se a resposta for OK
+        } else {
+          window.location.href = '/login'; // Redireciona para o login se não estiver autenticado
+        }
+      } catch (error) {
+        console.error('Erro ao verificar autenticação:', error);
+        // Tratar erro de forma apropriada, se necessário
+        window.location.href = '/login'; // Em caso de erro, redireciona para o login
+      }
+    };
+
+    checkAuthentication();
+
     const fetchCartItems = async () => {
       try {
         const response = await fetch('http://localhost:3000/cart-details', {
@@ -76,7 +98,7 @@ export default function CartPage() {
     return <Text>Carregando...</Text>;
   }
 
-  return (
+  return authenticated ? (
     <View style={styles.container}>
       <Header />
       <ScrollView contentContainerStyle={styles.scrollView}>
@@ -122,7 +144,7 @@ export default function CartPage() {
         <Text style={styles.continueButtonText}>Continuar</Text>
       </TouchableOpacity>
     </View>
-  );
+  ):null;
 }
 
 

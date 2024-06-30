@@ -7,8 +7,30 @@ import Header from '../components/Header';
 export default function OrderStatus() {
   const { width } = Dimensions.get('window');
   const [deliveryTime, setDeliveryTime] = useState('');
+  const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
+    const checkAuthentication = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/home', {
+          method: 'GET',
+          credentials: 'include' // Incluir cookies na requisição
+        });
+
+        if (response.ok) {
+          setAuthenticated(true); // Atualiza o estado para autenticado se a resposta for OK
+        } else {
+          window.location.href = '/login'; // Redireciona para o login se não estiver autenticado
+        }
+      } catch (error) {
+        console.error('Erro ao verificar autenticação:', error);
+        // Tratar erro de forma apropriada, se necessário
+        window.location.href = '/login'; // Em caso de erro, redireciona para o login
+      }
+    };
+
+    checkAuthentication();
+
     const now = new Date();
     const deliveryWindowStart = new Date(now.getTime() + 30 * 60000); 
     const deliveryWindowEnd = new Date(now.getTime() + 45 * 60000);
@@ -26,7 +48,7 @@ export default function OrderStatus() {
     return `${hours}:${minutes}`;
   };
 
-  return (
+  return authenticated ? (
     <View style={styles.container}>
       <Header />
       
@@ -54,7 +76,7 @@ export default function OrderStatus() {
       
       <FooterMenu />
     </View>
-  );
+  ):null;
 }
 
 const styles = StyleSheet.create({
