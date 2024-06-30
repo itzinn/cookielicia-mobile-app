@@ -5,6 +5,7 @@ import Register from './screens/Register';
 import Home from './screens/Home';
 import CartPage from './screens/CartPage';
 import OrderStatus from './screens/OrderStatus';
+import CompleteOrder from './screens/CompleteOrder';
 
 
 export default function App() {
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/orderStatus" element={<OrderStatus />} />
           <Route path="/cartpage" element={<CartPage />} />
+          <Route path="/completeorder" element={<CompleteOrder />} />
         </Routes>
     
     </Router>
