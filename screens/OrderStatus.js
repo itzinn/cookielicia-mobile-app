@@ -45,9 +45,12 @@ export default function OrderStatus() {
         const data = await response.json();
         setOrderDetails(data);
 
+        // Convert created_at to UTC-3:00
         const createdAt = new Date(data.created_at);
-        const deliveryWindowStart = new Date(createdAt.getTime() + 30 * 60000);
-        const deliveryWindowEnd = new Date(createdAt.getTime() + 45 * 60000);
+        const brtDate = new Date(createdAt.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
+
+        const deliveryWindowStart = new Date(brtDate.getTime() + 30 * 60000);
+        const deliveryWindowEnd = new Date(brtDate.getTime() + 45 * 60000);
 
         const formattedStartTime = formatTime(deliveryWindowStart);
         const formattedEndTime = formatTime(deliveryWindowEnd);
@@ -101,6 +104,8 @@ export default function OrderStatus() {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Detalhes do Pedido</Text>
+          <Text style={styles.orderDate}>Data do Pedido: {new Date(orderDetails.created_at).toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' })}</Text>
+          <Text style={styles.orderTime}>Hora do Pedido: {new Date(orderDetails.created_at).toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' })}</Text>
           {orderDetails.items.map((item) => (
             <Text key={item.id} style={styles.orderItem}>{item.quantity}x {item.title} - R${item.price}</Text>
           ))}
@@ -112,7 +117,6 @@ export default function OrderStatus() {
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -165,6 +169,16 @@ const styles = StyleSheet.create({
   },
   predictionText: {
     fontSize: 18,
+  },
+  orderDate: {
+    fontSize: 18,
+    color: '#888',
+    marginBottom: 5,
+  },
+  orderTime: {
+    fontSize: 18,
+    color: '#888',
+    marginBottom: 10,
   },
   predictionTitle: { fontSize: 20, fontWeight: 'bold', marginTop: 20 },
   predictionContainer: { alignItems: 'center', marginVertical: 10 },

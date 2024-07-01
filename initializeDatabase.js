@@ -34,7 +34,7 @@ function createTables() {
       total_amount REAL NOT NULL,
       delivery_method TEXT NOT NULL,
       address TEXT,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      created_at TIMESTAMP DEFAULT (datetime(CURRENT_TIMESTAMP, '-3 hours')),
       FOREIGN KEY (user_id) REFERENCES users(id)
     )
   `);
@@ -61,8 +61,8 @@ function seedDatabase() {
 
     // Inserir dados na tabela cookies
     const cookieStmt = db.prepare(`INSERT INTO cookies (title, description, oldPrice, newPrice) VALUES (?, ?, ?, ?)`);
-    cookieStmt.run('Cookie de Chocolate', 'a','R$ 12,00', 'R$ 8,00');
-    cookieStmt.run('Cookie de Baunilha', 'a','R$ 10,00', 'R$ 7,00');
+    cookieStmt.run('Cookie de Chocolate', 'a', 'R$ 12,00', 'R$ 8,00');
+    cookieStmt.run('Cookie de Baunilha', 'a', 'R$ 10,00', 'R$ 7,00');
     cookieStmt.run('Cookie de Aveia', 'a', 'R$ 8,00', 'R$ 5,00');
     cookieStmt.finalize();
   });
