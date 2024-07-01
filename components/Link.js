@@ -3,8 +3,7 @@ import { Text, StyleSheet, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 export default function Link({ label, to }) {
-  //const navigation = useNavigation();
-
+  
   return (
     <Pressable onPress={() => navigation.navigate(to)} style={styles.linkContainer}>
       <Text style={styles.linkText}>{label}</Text>
