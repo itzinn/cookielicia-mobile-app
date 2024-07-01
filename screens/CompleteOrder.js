@@ -1,7 +1,13 @@
+// CompleteOrder.js
+
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, CheckBox } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import FooterMenu from '../components/FooterMenu';
 import Header from '../components/Header';
+import DeliveryMethodSection from '../components/DeliveryMethodSection';
+import AddressSection from '../components/AddressSection';
+import OrderItemsSection from '../components/OrderItemsSection';
+import CompleteOrderButton from '../components/CompleteOrderButton';
 
 export default function CompleteOrder() {
   const [address, setAddress] = useState('');
@@ -11,7 +17,9 @@ export default function CompleteOrder() {
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
 
-  const navigateToOrderStatus = (orderId) => window.location.href = `/orderStatus?orderId=${orderId}`;
+  const navigateToOrderStatus = (orderId) => {
+    window.location.href = `/orderStatus?orderId=${orderId}`;
+  };
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -33,7 +41,6 @@ export default function CompleteOrder() {
     };
 
     checkAuthentication();
-    
 
     const fetchCartDetails = async () => {
       try {
@@ -127,61 +134,30 @@ export default function CompleteOrder() {
       <Header />
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>Finalizar</Text>
-        
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Método de entrega</Text>
-          <View style={styles.optionContainer}>
-            <CheckBox
-              value={deliveryMethod === 'Delivery'}
-              onValueChange={() => setDeliveryMethod('Delivery')}
-            />
-            <Text style={styles.optionText}>Delivery</Text>
-          </View>
-          <View style={styles.optionContainer}>
-            <CheckBox
-              value={deliveryMethod === 'Retirada'}
-              onValueChange={() => setDeliveryMethod('Retirada')}
-            />
-            <Text style={styles.optionText}>Retirada</Text>
-          </View>
-          {deliveryMethod === 'Delivery' && (
-            <Text style={styles.deliveryFee}>Taxa de entrega - R$ 3,00</Text>
-          )}
-        </View>
+
+        <DeliveryMethodSection
+          deliveryMethod={deliveryMethod}
+          setDeliveryMethod={setDeliveryMethod}
+        />
 
         {deliveryMethod === 'Delivery' && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Endereço</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Digite seu endereço"
-              value={address}
-              onChangeText={setAddress}
-            />
-            <TouchableOpacity style={styles.button} onPress={handleSaveAddress}>
-              <Text style={styles.buttonText}>Salvar Endereço</Text>
-            </TouchableOpacity>
-          </View>
+          <AddressSection
+            address={address}
+            setAddress={setAddress}
+            handleSaveAddress={handleSaveAddress}
+          />
         )}
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Pedido</Text>
-          {cartItems.map((item) => (
-            <Text key={item.id} style={styles.orderItem}>{item.quantity}x {item.title} - {item.newPrice}</Text>
-          ))}
-        </View>
+        <OrderItemsSection cartItems={cartItems} />
 
         <Text style={styles.total}>R$ {totalAmount.toFixed(2)} / {cartItems.length} Itens</Text>
 
-        <TouchableOpacity style={styles.button} onPress={handleCompleteOrder}>
-          <Text style={styles.buttonText}>FINALIZAR</Text>
-        </TouchableOpacity>
+        <CompleteOrderButton onPress={handleCompleteOrder} />
       </ScrollView>
       <FooterMenu />
     </View>
   ) : null;
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -201,80 +177,10 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     textAlign: 'center',
   },
-  section: {
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    textAlign: 'center',
-    backgroundColor: '#FCB040',
-    width: '100%',
-    paddingVertical: 5,
-  },
-  optionContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 10,
-    alignItems: 'center',
-  },
-  optionText: {
-    fontSize: 19,
-    marginLeft: 10,
-  },
-  checkbox: {
-    alignSelf: "center",
-  },
-  deliveryFee: {
-    fontSize: 18,
-    fontStyle: 'italic',
-    textAlign: 'center',
-  },
-  input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    width: '80%',
-    textAlign: 'center',
-  },
-  saveButton: {
-    backgroundColor: '#007BFF',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  saveButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    textAlign: 'center',
-  },
-  orderItem: {
-    fontSize: 18,
-    textAlign: 'center',
-  },
   total: {
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 20,
     textAlign: 'center',
   },
-  button: {
-    backgroundColor: '#FFA500',
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
 });
-
