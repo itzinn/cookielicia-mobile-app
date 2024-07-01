@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   summaryTitle: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 10,
   },
@@ -207,10 +207,10 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   summaryText: {
-    fontSize: 16,
+    fontSize: 19,
   },
   summaryTotalText: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   continueButton: {
