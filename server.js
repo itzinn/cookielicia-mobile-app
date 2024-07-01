@@ -54,6 +54,7 @@ app.use(session({
 
 //ROTAS
 //[TODO] implementar middleware de autenticação às rotas necessárias
+//[TODO] corrigir possível IDOR na visualização de pedidos
 // Login endpoint
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
