@@ -43,7 +43,9 @@ export default function PastOrders() {
         }
 
         const data = await response.json();
-        setOrders(data);
+        // Ordenar os pedidos pelo ID em ordem decrescente
+        const sortedOrders = data.sort((a, b) => b.id - a.id);
+        setOrders(sortedOrders);
       } catch (error) {
         console.error('Erro ao buscar pedidos:', error);
       } finally {
