@@ -17,10 +17,13 @@ export default function CompleteOrder() {
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
 
+
+  //encaminha pro status do pedido
   const navigateToOrderStatus = (orderId) => {
     window.location.href = `/orderStatus?orderId=${orderId}`;
   };
 
+  //verificacao de login
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
@@ -42,6 +45,7 @@ export default function CompleteOrder() {
 
     checkAuthentication();
 
+    //busca detalhes do carrinho
     const fetchCartDetails = async () => {
       try {
         const response = await fetch('http://localhost:3000/cart-details', {
@@ -62,6 +66,7 @@ export default function CompleteOrder() {
 
     fetchCartDetails();
 
+    //busca endereco
     const fetchUserAddress = async () => {
       try {
         const response = await fetch('http://localhost:3000/user-address', {
@@ -77,6 +82,7 @@ export default function CompleteOrder() {
     fetchUserAddress();
   }, [deliveryMethod]);
 
+  //salva o endereco
   const handleSaveAddress = async () => {
     try {
       const response = await fetch('http://localhost:3000/update-address', {
@@ -98,6 +104,7 @@ export default function CompleteOrder() {
     }
   };
 
+  //finaliza o pedido
   const handleCompleteOrder = async () => {
     try {
       const response = await fetch('http://localhost:3000/complete-order', {
@@ -109,8 +116,8 @@ export default function CompleteOrder() {
         body: JSON.stringify({ deliveryMethod, address, cartItems, totalAmount })
       });
       const data = await response.json();
+      //limpa carrinho apos compra
       if (response.ok) {
-        // Clear the cart after completing the order
         await fetch('http://localhost:3000/clear-cart', {
           method: 'POST',
           credentials: 'include'
@@ -159,6 +166,8 @@ export default function CompleteOrder() {
   ) : null;
 }
 
+
+//estilos da pagina
 const styles = StyleSheet.create({
   container: {
     flex: 1,

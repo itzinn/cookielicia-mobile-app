@@ -16,24 +16,27 @@ export default function CartPage() {
   const navigateToCompleteOrder = () => window.location.href = '/completeOrder';
   const navigateToHome = () => window.location.href = '/home';
 
-
+  //verificacao de login
   useEffect(() => {
+    
     const checkAuthentication = async () => {
+      // Incluir cookies na requisição
       try {
         const response = await fetch('http://localhost:3000/home', {
           method: 'GET',
-          credentials: 'include' // Incluir cookies na requisição
+          credentials: 'include' 
         });
-
+        // Atualiza o estado para autenticado se a resposta for OK
         if (response.ok) {
-          setAuthenticated(true); // Atualiza o estado para autenticado se a resposta for OK
+          setAuthenticated(true); 
         } else {
-          window.location.href = '/login'; // Redireciona para o login se não estiver autenticado
+          window.location.href = '/login'; 
         }
+        // Tratar erro de forma apropriada, se necessário
       } catch (error) {
         console.error('Erro ao verificar autenticação:', error);
-        // Tratar erro de forma apropriada, se necessário
-        window.location.href = '/login'; // Em caso de erro, redireciona para o login
+        
+        window.location.href = '/login'; 
       }
     };
 
@@ -63,13 +66,14 @@ export default function CartPage() {
     fetchCartItems();
   }, []);
 
+  
+  //controle de quantidade de cada produto do carrinho
   const handleQuantityChange = (productId, newQuantity) => {
     setCartItems(prevItems =>
       prevItems.map(item =>
         item.id === productId ? { ...item, quantity: newQuantity } : item
       )
     );
-  
     const newSubtotal = cartItems.reduce((sum, item) =>
       item.id === productId
         ? sum + parseFloat(item.newPrice.replace('R$', '').replace(',', '.')) * newQuantity
@@ -83,6 +87,7 @@ export default function CartPage() {
     setTotal(newSubtotal + deliveryFee + serviceFee);
   };  
 
+  //controle de remocao de itens do carrinho
   const handleRemoveItem = (productId) => {
     setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
     const newSubtotal = cartItems.reduce((sum, item) =>
@@ -114,9 +119,9 @@ export default function CartPage() {
               description={item.description}
               price={item.newPrice}
               quantity={item.quantity}
-              productId={item.id} // Passe o productId para o CookieCard
+              productId={item.id} 
               onQuantityChange={handleQuantityChange}
-              onRemoveItem={handleRemoveItem} // Pass the handleRemoveItem function
+              onRemoveItem={handleRemoveItem} 
             />
           </View>
         ))}
@@ -132,6 +137,7 @@ export default function CartPage() {
   ) : null;
 }
 
+//estilos da pagina
 const styles = StyleSheet.create({
   container: {
     flex: 1,

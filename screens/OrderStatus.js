@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Dimensions, Image, ScrollView } from 'react-native';
-import { useLocation } from 'react-router-dom'; // Assuming you're using react-router
+import { useLocation } from 'react-router-dom';
 
 import FooterMenu from '../components/FooterMenu';
 import Header from '../components/Header';
@@ -11,17 +11,17 @@ export default function OrderStatus() {
   const [authenticated, setAuthenticated] = useState(false);
   const [orderDetails, setOrderDetails] = useState(null);
 
-  // Using useLocation hook to get query params
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const orderId = params.get('orderId');
 
+  //verificacao de login
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
         const response = await fetch('http://localhost:3000/home', {
           method: 'GET',
-          credentials: 'include' // Include cookies in the request
+          credentials: 'include'
         });
 
         if (response.ok) {
@@ -35,8 +35,8 @@ export default function OrderStatus() {
       }
     };
 
+    //busca detalhes do pedido
     checkAuthentication();
-
     const fetchOrderDetails = async () => {
       try {
         const response = await fetch(`http://localhost:3000/order-details?orderId=${orderId}`, {
@@ -45,7 +45,7 @@ export default function OrderStatus() {
         const data = await response.json();
         setOrderDetails(data);
 
-        // Convert created_at to UTC-3:00
+        //converte horario
         const createdAt = new Date(data.created_at);
         const brtDate = new Date(createdAt.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
 
@@ -67,6 +67,7 @@ export default function OrderStatus() {
     }
   }, [orderId]);
 
+  //formata horario
   const formatTime = (time) => {
     const hours = time.getHours().toString().padStart(2, '0');
     const minutes = time.getMinutes().toString().padStart(2, '0');
@@ -118,6 +119,8 @@ export default function OrderStatus() {
   );
 }
 
+
+//estilos da pagina
 const styles = StyleSheet.create({
   container: {
     flex: 1,
