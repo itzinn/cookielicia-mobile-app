@@ -33,6 +33,7 @@ export default function CompleteOrder() {
     };
 
     checkAuthentication();
+    
 
     const fetchCartDetails = async () => {
       try {
@@ -218,10 +219,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginBottom: 10,
+    alignItems: 'center',
   },
   optionText: {
     fontSize: 19,
-    textAlign: 'center',
+    marginLeft: 10,
+  },
+  checkbox: {
+    alignSelf: "center",
   },
   deliveryFee: {
     fontSize: 18,
