@@ -88,17 +88,15 @@ export default function CookieCard({ image, title, description, price, quantity:
         <Text style={styles.title}>{title}</Text>
         <Text style={styles.description}>{description}</Text>
         <Text style={styles.price}>{price}</Text>
-        <View style={styles.quantityContainer}>
           <div style={styles.quantityContainer}>
             <button style={styles.quantityButton} onClick={decreaseQuantity}>-</button>
             <span style={styles.quantity}>{quantity}</span>
             <button style={styles.quantityButton} onClick={increaseQuantity}>+</button>
           </div>
-        </View>
-        <TouchableOpacity style={styles.deleteButton} onPress={removeItem}>
+      </View>
+      <TouchableOpacity style={styles.deleteButton} onPress={removeItem}>
           <Icon name="trash" size={20} color="#FF0000" />
         </TouchableOpacity>
-      </View>
     </View>
   );
 }
@@ -151,8 +149,8 @@ const styles = StyleSheet.create({
   },
   quantityContainer: {
     position: 'absolute',
-    right: '-50px',
-    bottom: '-15px',
+    right: '-45px',
+    bottom: '-25px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -160,7 +158,8 @@ const styles = StyleSheet.create({
     borderRadius: '100%',
     padding: '20px 10px',
     width: 55,
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+    height: 55,
+    boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
     marginTop: 10,
   },
   quantityButton: {
@@ -181,7 +180,8 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     position: 'absolute',
-    right: '-80px',
-    bottom: '140px',
+    top: 20,
+    right: 20,
+    backgroundColor: 'transparent',
   },
 });

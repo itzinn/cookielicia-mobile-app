@@ -55,15 +55,17 @@ function createTables() {
 // Função para popular tabelas com dados iniciais, se necessário
 function seedDatabase() {
   db.serialize(() => {
-    // const stmt = db.prepare(`INSERT INTO users (username, email, password) VALUES (?, ?, ?)`);
-    // stmt.run('admin','admin@example.com', 'password123');
-    // stmt.finalize();
+    const stmt = db.prepare(`INSERT INTO users (username, email, password) VALUES (?, ?, ?)`);
+    stmt.run('admin','admin@example.com', 'password123');
+    stmt.finalize();
 
     // Inserir dados na tabela cookies
     const cookieStmt = db.prepare(`INSERT INTO cookies (title, description, oldPrice, newPrice) VALUES (?, ?, ?, ?)`);
-    cookieStmt.run('Cookie de Chocolate', 'a', 'R$ 12,00', 'R$ 8,00');
-    cookieStmt.run('Cookie de Baunilha', 'a', 'R$ 10,00', 'R$ 7,00');
-    cookieStmt.run('Cookie de Aveia', 'a', 'R$ 8,00', 'R$ 5,00');
+    cookieStmt.run('Cookie de Chocolate', 'Delicioso cookie de chocolate com pedaços irresistíveis de chocolate derretido', 'R$ 12,00', 'R$ 8,00');
+    cookieStmt.run('Cookie de Baunilha', 'Saboroso cookie de baunilha, suave e aromático, perfeito para qualquer ocasião', 'R$ 10,00', 'R$ 7,00');
+    cookieStmt.run('Cookie de Aveia', 'Saudável cookie de aveia, crocante e cheio de sabor, com um toque de mel', 'R$ 8,00', 'R$ 5,00');
+    cookieStmt.run('Cookie de Amendoim', 'Crocante cookie de amendoim, rico em sabor e textura, com pedaços de amendoim torrado', 'R$ 11,00', 'R$ 7,50');
+    cookieStmt.run('Cookie de Limão', 'Refrescante cookie de limão, com um toque cítrico e uma crocância perfeita', 'R$ 9,00', 'R$ 6,50');
     cookieStmt.finalize();
   });
 
