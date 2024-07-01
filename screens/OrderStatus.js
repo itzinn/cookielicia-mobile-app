@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    paddingBottom: 100, 
+    paddingBottom: 100,
   },
   title: {
     fontSize: 24,
@@ -146,10 +146,10 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     marginVertical: 20,
-    overflow: 'hidden', 
+    overflow: 'hidden',
   },
   image: {
-    resizeMode: 'contain', 
+    resizeMode: 'contain',
   },
   predictionTitle: {
     fontSize: 24,
@@ -166,4 +166,11 @@ const styles = StyleSheet.create({
   predictionText: {
     fontSize: 18,
   },
+  predictionTitle: { fontSize: 20, fontWeight: 'bold', marginTop: 20 },
+  predictionContainer: { alignItems: 'center', marginVertical: 10 },
+  predictionText: { fontSize: 18 },
+  section: { marginVertical: 20 },
+  sectionTitle: { fontSize: 18, fontWeight: 'bold' },
+  orderItem: { fontSize: 16 },
+  total: { fontSize: 18, fontWeight: 'bold', marginTop: 10 }
 });
