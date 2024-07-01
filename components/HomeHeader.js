@@ -7,9 +7,8 @@ const { width, height } = Dimensions.get('window');
 const isTablet = width >= 600 && height >= 600;
 const headerHeight = 80;
 
-export default function Header() {
+export default function HomeHeader({ onMenuPress }) {
   const navigateToCart = () => window.location.href = '/cartPage';
-  const navigateBack = () => window.history.back();
 
   return (
     <ImageBackground
@@ -19,14 +18,14 @@ export default function Header() {
     >
       <View style={styles.overlay} />
       <View style={styles.headerContent}>
-        <Pressable style={styles.headerIcon}>
-        <Icon name="bars" size={RFPercentage(4)} onPress={navigateBack} color="#000" />
+        <Pressable style={styles.headerIcon} onPress={onMenuPress}>
+          <Icon name="bars" size={RFPercentage(4)} color="#000" />
         </Pressable>
         <View style={styles.headerLogo}>
           <Text style={styles.logoText}>Cookielicia</Text>
         </View>
-        <Pressable style={styles.headerIcon}>
-          <Icon name="shopping-cart" size={RFPercentage(4)} onPress={navigateToCart} color="#000" />
+        <Pressable style={styles.headerIcon} onPress={navigateToCart}>
+          <Icon name="shopping-cart" size={RFPercentage(4)} color="#000" />
         </Pressable>
       </View>
     </ImageBackground>
