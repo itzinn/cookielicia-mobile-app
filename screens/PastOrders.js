@@ -86,16 +86,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#FFF',
-    padding: 30, // Aumenta o padding para aumentar o tamanho do card
+    padding: 30, 
     borderRadius: 10,
     marginVertical: 10,
     width: '100%',
-    maxWidth: 500, // Aumenta o maxWidth para aumentar o tamanho do card
+    maxWidth: 500, 
   },
   image: {
-    width: 70, // Aumenta o tamanho da imagem
-    height: 70, // Aumenta o tamanho da imagem
-    borderRadius: 35, // Aumenta o tamanho do borderRadius para manter a imagem redonda
+    width: 100, 
+    height: 100, 
+    borderRadius: 35, 
     marginRight: 20,
   },
   orderDetails: {
