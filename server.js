@@ -52,6 +52,8 @@ app.use(session({
   cookie: { secure: false } // Use secure: true in production
 }));
 
+//ROTAS
+//[TODO] implementar middleware de autenticação às rotas necessárias
 // Login endpoint
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
@@ -95,6 +97,7 @@ app.post('/register', (req, res) => {
   );
 });
 
+//valida autenticação para o front end
 app.get('/home', (req, res) => {
   if (req.session.user) {
     res.status(200).json({ message: 'Usuário autenticado' });
