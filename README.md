@@ -9,4 +9,5 @@ Trabalho feito para a disciplina de Desenvolvimento Web e Mobile do ICMC USP de 
 Alguns comandos necessarios para executar a aplicação:
 
 npx expo start
+
 node ./server.js
