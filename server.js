@@ -296,6 +296,65 @@ app.post('/complete-order', (req, res) => {
   });
 });
 
+// Rota para buscar detalhes do pedido
+app.get('/order-details', async (req, res) => {
+  const user = req.session.user;
+  const orderId = req.query.orderId;
+
+  if (!user) {
+    return res.status(401).json({ message: 'Usuário não autenticado' });
+  }
+
+  if (!orderId) {
+    return res.status(400).json({ message: 'ID do pedido não fornecido' });
+  }
+
+  try {
+    const orderQuery = `
+      SELECT orders.id, orders.total_amount, orders.delivery_method, orders.address, orders.created_at,
+             order_items.id AS item_id, order_items.cookie_id, order_items.quantity, order_items.price, cookies.title
+      FROM orders
+      JOIN order_items ON orders.id = order_items.order_id
+      JOIN cookies ON order_items.cookie_id = cookies.id
+      WHERE orders.id = ? AND orders.user_id = ?
+    `;
+    db.all(orderQuery, [orderId, user.id], (err, rows) => {
+      if (err) {
+        return res.status(500).json({ message: 'Erro ao buscar detalhes do pedido' });
+      }
+
+      if (rows.length === 0) {
+        return res.status(404).json({ message: 'Pedido não encontrado' });
+      }
+
+      const order = {
+        id: rows[0].id,
+        total_amount: rows[0].total_amount,
+        delivery_method: rows[0].delivery_method,
+        address: rows[0].address,
+        created_at: rows[0].created_at,
+        items: rows.map(row => ({
+          id: row.item_id,
+          cookie_id: row.cookie_id,
+          quantity: row.quantity,
+          price: row.price,
+          title: row.title
+        }))
+      };
+
+      res.json(order);
+    });
+  } catch (error) {
+    console.error('Erro ao buscar detalhes do pedido:', error);
+    res.status(500).json({ message: 'Erro interno do servidor' });
+  }
+});
+
+// Clear Cart Route
+app.post('/clear-cart', (req, res) => {
+  req.session.cart = [];
+  res.json({ message: 'Carrinho limpo com sucesso' });
+});
 
 // Start the server
 app.listen(port, () => {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Dimensions, Image, ScrollView } from 'react-native';
+import { useLocation } from 'react-router-dom'; // Assuming you're using react-router
 
 import FooterMenu from '../components/FooterMenu';
 import Header from '../components/Header';
@@ -8,39 +9,60 @@ export default function OrderStatus() {
   const { width } = Dimensions.get('window');
   const [deliveryTime, setDeliveryTime] = useState('');
   const [authenticated, setAuthenticated] = useState(false);
+  const [orderDetails, setOrderDetails] = useState(null);
+
+  // Using useLocation hook to get query params
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const orderId = params.get('orderId');
 
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
         const response = await fetch('http://localhost:3000/home', {
           method: 'GET',
-          credentials: 'include' // Incluir cookies na requisição
+          credentials: 'include' // Include cookies in the request
         });
 
         if (response.ok) {
-          setAuthenticated(true); // Atualiza o estado para autenticado se a resposta for OK
+          setAuthenticated(true);
         } else {
-          window.location.href = '/login'; // Redireciona para o login se não estiver autenticado
+          window.location.href = '/login';
         }
       } catch (error) {
         console.error('Erro ao verificar autenticação:', error);
-        // Tratar erro de forma apropriada, se necessário
-        window.location.href = '/login'; // Em caso de erro, redireciona para o login
+        window.location.href = '/login';
       }
     };
 
     checkAuthentication();
 
-    const now = new Date();
-    const deliveryWindowStart = new Date(now.getTime() + 30 * 60000); 
-    const deliveryWindowEnd = new Date(now.getTime() + 45 * 60000);
+    const fetchOrderDetails = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/order-details?orderId=${orderId}`, {
+          credentials: 'include'
+        });
+        const data = await response.json();
+        setOrderDetails(data);
 
-    const formattedStartTime = formatTime(deliveryWindowStart);
-    const formattedEndTime = formatTime(deliveryWindowEnd);
+        const createdAt = new Date(data.created_at);
+        const deliveryWindowStart = new Date(createdAt.getTime() + 30 * 60000);
+        const deliveryWindowEnd = new Date(createdAt.getTime() + 45 * 60000);
 
-    const deliveryPrediction = `${formattedStartTime} ~ ${formattedEndTime}`;
-    setDeliveryTime(deliveryPrediction);
-  }, []);
+        const formattedStartTime = formatTime(deliveryWindowStart);
+        const formattedEndTime = formatTime(deliveryWindowEnd);
+
+        const deliveryPrediction = `${formattedStartTime} ~ ${formattedEndTime}`;
+        setDeliveryTime(deliveryPrediction);
+      } catch (error) {
+        console.error('Erro ao buscar detalhes do pedido:', error);
+      }
+    };
+
+    if (orderId) {
+      fetchOrderDetails();
+    }
+  }, [orderId]);
 
   const formatTime = (time) => {
     const hours = time.getHours().toString().padStart(2, '0');
@@ -48,10 +70,14 @@ export default function OrderStatus() {
     return `${hours}:${minutes}`;
   };
 
-  return authenticated ? (
+  if (!authenticated || !orderDetails) {
+    return <Text>Carregando...</Text>;
+  }
+
+  return (
     <View style={styles.container}>
       <Header />
-      
+
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>PEDIDO REALIZADO</Text>
 
@@ -61,10 +87,10 @@ export default function OrderStatus() {
         </View>
 
         <View style={styles.imageContainer}>
-          <Image 
-            source={require('../assets/cookieMan.jpg')} 
-            style={[styles.image, { width: width * 0.3, height: width * 0.2 }]} 
-            onError={(error) => console.log('Image load error:', error)} 
+          <Image
+            source={require('../assets/cookieMan.jpg')}
+            style={[styles.image, { width: width * 0.3, height: width * 0.2 }]}
+            onError={(error) => console.log('Image load error:', error)}
           />
         </View>
 
@@ -72,12 +98,21 @@ export default function OrderStatus() {
         <View style={styles.predictionContainer}>
           <Text style={styles.predictionText}>{deliveryTime}</Text>
         </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Detalhes do Pedido</Text>
+          {orderDetails.items.map((item) => (
+            <Text key={item.id} style={styles.orderItem}>{item.quantity}x {item.title} - R${item.price}</Text>
+          ))}
+          <Text style={styles.total}>Total: R$ {orderDetails.total_amount.toFixed(2)}</Text>
+        </View>
       </ScrollView>
-      
+
       <FooterMenu />
     </View>
-  ):null;
+  );
 }
+
 
 const styles = StyleSheet.create({
   container: {

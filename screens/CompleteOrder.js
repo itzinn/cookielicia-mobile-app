@@ -11,24 +11,24 @@ export default function CompleteOrder() {
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
 
-  const navigateToOrderStatus = () => window.location.href = '/orderStatus';
+  const navigateToOrderStatus = (orderId) => window.location.href = `/orderStatus?orderId=${orderId}`;
 
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
         const response = await fetch('http://localhost:3000/home', {
           method: 'GET',
-          credentials: 'include' // Incluir cookies na requisição
+          credentials: 'include'
         });
 
         if (response.ok) {
-          setAuthenticated(true); // Atualiza o estado para autenticado se a resposta for OK
+          setAuthenticated(true);
         } else {
-          window.location.href = '/login'; // Redireciona para o login se não estiver autenticado
+          window.location.href = '/login';
         }
       } catch (error) {
         console.error('Erro ao verificar autenticação:', error);
-        window.location.href = '/login'; // Em caso de erro, redireciona para o login
+        window.location.href = '/login';
       }
     };
 
@@ -77,7 +77,7 @@ export default function CompleteOrder() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ address }),
-        credentials: 'include' // Certifica-se de que os cookies são enviados com a requisição
+        credentials: 'include'
       });
 
       if (response.ok) {
@@ -102,7 +102,12 @@ export default function CompleteOrder() {
       });
       const data = await response.json();
       if (response.ok) {
-        navigateToOrderStatus();
+        // Clear the cart after completing the order
+        await fetch('http://localhost:3000/clear-cart', {
+          method: 'POST',
+          credentials: 'include'
+        });
+        navigateToOrderStatus(data.orderId);
       } else {
         alert('Erro ao criar pedido: ' + data.message);
       }
@@ -175,6 +180,7 @@ export default function CompleteOrder() {
     </View>
   ) : null;
 }
+
 
 const styles = StyleSheet.create({
   container: {
