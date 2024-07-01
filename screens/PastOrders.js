@@ -7,8 +7,30 @@ import Header from '../components/Header';
 export default function PastOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
+    const checkAuthentication = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/home', {
+          method: 'GET',
+          credentials: 'include' // Incluir cookies na requisição
+        });
+
+        if (response.ok) {
+          setAuthenticated(true); // Atualiza o estado para autenticado se a resposta for OK
+        } else {
+          window.location.href = '/login'; // Redireciona para o login se não estiver autenticado
+        }
+      } catch (error) {
+        console.error('Erro ao verificar autenticação:', error);
+        // Tratar erro de forma apropriada, se necessário
+        window.location.href = '/login'; // Em caso de erro, redireciona para o login
+      }
+    };
+
+    checkAuthentication();
+
     const fetchOrders = async () => {
       try {
         const response = await fetch('http://localhost:3000/user-orders', {
@@ -37,26 +59,26 @@ export default function PastOrders() {
   };
 
   if (loading) {
-    return (
+    return authenticated ?(
       <View style={styles.container}>
         <Header />
         <Text style={styles.loadingText}>Carregando...</Text>
         <FooterMenu />
       </View>
-    );
+    ): null;
   }
 
   if (orders.length === 0) {
-    return (
+    return authenticated ?(
       <View style={styles.container}>
         <Header />
         <Text style={styles.noOrdersText}>Nenhum pedido encontrado.</Text>
         <FooterMenu />
       </View>
-    );
+    ): null;
   }
 
-  return (
+  return authenticated ? (
     <View style={styles.container}>
       <Header />
       <ScrollView contentContainerStyle={styles.content}>
@@ -88,7 +110,7 @@ export default function PastOrders() {
       </ScrollView>
       <FooterMenu />
     </View>
-  );
+  ): null;
 }
 
 const styles = StyleSheet.create({
