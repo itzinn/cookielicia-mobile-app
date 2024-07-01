@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Pressable, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import Header from '../components/Header';
 import CookieCard from '../components/CookieCard';
+import CartSummary from '../components/CartSummary';
 
 const { width } = Dimensions.get('window');
 
@@ -13,6 +14,8 @@ export default function CartPage() {
   const [authenticated, setAuthenticated] = useState(false);
 
   const navigateToCompleteOrder = () => window.location.href = '/completeOrder';
+  const navigateToHome = () => window.location.href = '/home';
+
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -117,37 +120,17 @@ export default function CartPage() {
             />
           </View>
         ))}
-        <TouchableOpacity style={styles.addButton}>
+        <TouchableOpacity style={styles.addButton} onPress={navigateToHome}>
           <Text style={styles.addButtonText}>Adicionar mais Itens</Text>
         </TouchableOpacity>
-        <View style={styles.summaryContainer}>
-          <Text style={styles.summaryTitle}>Resumo do Pedido</Text>
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryText}>Subtotal</Text>
-            <Text style={styles.summaryText}>R$ {subtotal.toFixed(2)}</Text>
-          </View>
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryText}>Taxa de entrega</Text>
-            <Text style={styles.summaryText}>R$ 3,00</Text>
-          </View>
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryText}>Taxa de Serviço</Text>
-            <Text style={styles.summaryText}>R$ 0,00</Text>
-          </View>
-          <View style={styles.summaryRow}>
-            <Text style={styles.summaryTotalText}>Total</Text>
-            <Text style={styles.summaryTotalText}>R$ {total.toFixed(2)}</Text>
-          </View>
-        </View>
+        <CartSummary subtotal={subtotal} total={total} />
       </ScrollView>
       <TouchableOpacity style={styles.continueButton} onPress={navigateToCompleteOrder}>
         <Text style={styles.continueButtonText}>Continuar</Text>
       </TouchableOpacity>
     </View>
-  ):null;
+  ) : null;
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -187,31 +170,6 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: '#FFF',
     fontSize: 16,
-  },
-  summaryContainer: {
-    width: '100%',
-    maxWidth: 600,
-    padding: 16,
-    backgroundColor: '#EDEDE',
-    borderRadius: 5,
-    marginVertical: 20,
-  },
-  summaryTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  summaryRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginVertical: 5,
-  },
-  summaryText: {
-    fontSize: 19,
-  },
-  summaryTotalText: {
-    fontSize: 20,
-    fontWeight: 'bold',
   },
   continueButton: {
     backgroundColor: '#FFA726',
