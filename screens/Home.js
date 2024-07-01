@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Dimensions, ImageBackground, Link, Pressable } from 'react-native';
 
 import FooterMenu from '../components/FooterMenu';
-import Header from '../components/Header';
+import HomeHeader from '../components/HomeHeader';
 import ProductCarousel from '../components/ProductCarousel';
 
 export default function Home() {
@@ -34,7 +34,7 @@ export default function Home() {
   // Renderiza o conteúdo da página somente se estiver autenticado
   return authenticated ? (
     <View style={styles.container}>
-      <Header />
+      <HomeHeader />
       <View style={styles.headerRow}>
         <Text style={styles.headerTitle}>Ofertas</Text>
         <Pressable>
