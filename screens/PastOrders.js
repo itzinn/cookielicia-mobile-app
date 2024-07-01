@@ -6,6 +6,7 @@ import Header from '../components/Header';
 
 export default function PastOrders() {
   const [activeTab, setActiveTab] = useState('Ativo');
+  const currentDate = new Date().toLocaleDateString('pt-BR');
 
   const renderTabContent = () => {
     if (activeTab === 'Ativo') {
@@ -14,7 +15,7 @@ export default function PastOrders() {
           <Image source={{ uri: './assets/cookie-icon.png' }} style={styles.image} />
           <View style={styles.orderDetails}>
             <Text style={styles.orderTitle}>Tradicional</Text>
-            <Text style={styles.orderDate}>XXX</Text>
+            <Text style={styles.orderDate}>{currentDate}</Text>
             <Text style={styles.orderPrice}>R$10,00</Text>
             <Text style={styles.orderItems}>2 items</Text>
             <Text style={styles.orderStatus}>Estado do Pedido</Text>
@@ -35,10 +36,10 @@ export default function PastOrders() {
         <TouchableOpacity onPress={() => setActiveTab('Ativo')} style={[styles.tab, activeTab === 'Ativo' && styles.activeTab]}>
           <Text style={styles.tabText}>Ativo</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setActiveTab('Completadas')} style={[styles.tab, activeTab === 'Completadas' && styles.activeTab]}>
+        <TouchableOpacity onPress={() => setActiveTab('Finalizados')} style={[styles.tab, activeTab === 'Finalizados' && styles.activeTab]}>
           <Text style={styles.tabText}>Completadas</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setActiveTab('Canceladas')} style={[styles.tab, activeTab === 'Canceladas' && styles.activeTab]}>
+        <TouchableOpacity onPress={() => setActiveTab('Cancelados')} style={[styles.tab, activeTab === 'Cancelados' && styles.activeTab]}>
           <Text style={styles.tabText}>Canceladas</Text>
         </TouchableOpacity>
       </View>
@@ -85,39 +86,39 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#FFF',
-    padding: 20,
+    padding: 30, // Aumenta o padding para aumentar o tamanho do card
     borderRadius: 10,
     marginVertical: 10,
     width: '100%',
-    maxWidth: 400, 
+    maxWidth: 500, // Aumenta o maxWidth para aumentar o tamanho do card
   },
   image: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 70, // Aumenta o tamanho da imagem
+    height: 70, // Aumenta o tamanho da imagem
+    borderRadius: 35, // Aumenta o tamanho do borderRadius para manter a imagem redonda
     marginRight: 20,
   },
   orderDetails: {
     flex: 1,
   },
   orderTitle: {
-    fontSize: 18,
+    fontSize: 20, 
     fontWeight: 'bold',
   },
   orderDate: {
-    fontSize: 14,
+    fontSize: 18, 
     color: '#888',
   },
   orderPrice: {
-    fontSize: 16,
+    fontSize: 22,
     fontWeight: 'bold',
   },
   orderItems: {
-    fontSize: 14,
+    fontSize: 18, 
     color: '#888',
   },
   orderStatus: {
-    fontSize: 20,
+    fontSize: 22, 
     color: '#F8B400',
     marginTop: 10,
   },
